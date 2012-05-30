@@ -1,0 +1,47 @@
+﻿<Window x:Class="PedestrianTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:PedestrianTracker"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Pedestrian Counter"
+        Height="730" Width="700"
+        Loaded="Window_Loaded" Closed="Window_Closed" >
+    <Window.Resources>
+        <l:VisibilityConverter x:Key="VisibilityConverter" />
+    </Window.Resources>
+    <Grid Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="500" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Canvas Grid.Row="0" HorizontalAlignment="Left">
+            <Image Name="image1" Grid.Row="0" Height="480" Width="640" />
+        </Canvas>
+        <Grid>
+            <l:Trajectory x:Name="trajectoryCanvas1" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+            <l:Trajectory x:Name="trajectoryCanvas2" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+            <l:Trajectory x:Name="trajectoryCanvas3" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+            <l:Trajectory x:Name="trajectoryCanvas4" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+            <l:Trajectory x:Name="trajectoryCanvas5" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+            <l:Trajectory x:Name="trajectoryCanvas6" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+        </Grid>
+        <Grid Name="MessageGrid" Grid.Row="1" Height="50" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Name="TotalPlayersLabel" Text="Total players: " FontSize="20" />
+                <TextBlock Name="TotalPlayersDisplay" Text="{Binding Path=TotalPlayers}" FontSize="20" />
+                <TextBlock Text="   Pedestrian Counts: "  FontSize="20"/>
+                <TextBlock Name="PedestrianCountsDisplay" Text="{Binding Path=PedestrianCounts}" FontSize="20" />
+                <!--TextBlock Text="   Skeleton Y: " />
+                <TextBlock Name="SkeletonYDisplay" Text="{Binding Path=SkeletonY}" FontSize="20" /-->
+            </StackPanel>
+            <TextBlock Name="errorBox" Grid.Column="1" FontSize="20" Foreground="Red" />
+            <!--TextBlock Name="PedestrianCountsDisplay" Text="{Binding Path=PedestrianCounts}" Grid.Column="1" FontSize="20" /-->
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,15 @@
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\App.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker_MarkupCompile.cache
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker_MarkupCompile.lref
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker.exe
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\PedestrianTracker.exe
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\PedestrianTracker.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\MainWindow.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker.g.resources
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker.Properties.Resources.resources
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
