@@ -36,6 +36,8 @@ namespace PedestrianTracker
 
         private const int numberOfSkeletons = 6;
 
+        private const double DistanceThreshold = 0.1;
+
         //Drawing
         private readonly Brush centerPointBrush = Brushes.Black;
         private const double BodyCenterThickness = 8;
@@ -260,30 +262,24 @@ namespace PedestrianTracker
                         if (s.TrackingState != SkeletonTrackingState.NotTracked)
                         {
                             
-
                             //set tracking state to Position Only and increment player count
                             s.TrackingState = SkeletonTrackingState.PositionOnly;
                             TotalPlayers++;
 
-                            //DataContextLabel.Text = "   Skeleton ID: " + s.TrackingId.ToString();
-
-                            //DrawCenterPoint(s, dc);
-
                             trajectoryCanvas.RefreshTrajectory(s, SkeletonPointToScreen(s.Position), trackedSkeleton);
-
-                            
 
                         }
 
+                        //Either not tracking yet or leaving tracking state
                         else
                         {
-                            
-
-                            if (trajectoryCanvas.Distance > .1)
+                            //Minimum distance threshold to count those that have been tracked long enough
+                            if (trajectoryCanvas.Distance > DistanceThreshold)
                             {
                                 Debug.WriteLine("Distance " + trajectoryCanvas.Distance);
                                 PedestrianCounts++;
                             }
+
                             trajectoryCanvas.Reset();
                         }
                     }
@@ -413,7 +409,6 @@ namespace PedestrianTracker
                             BodyCenterThickness,
                             BodyCenterThickness);
         }
-
 
         private void CreateTrajectoryCanvases()
         {

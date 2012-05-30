@@ -13,3 +13,6 @@ C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\Pe
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\PedestrianTracker.exe.config
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker_Content.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\trajectoryData.sdf

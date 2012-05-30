@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Globalization;
+using System.Data.SqlClient;
+using System.Configuration;
 using Microsoft.Kinect;
 
 namespace PedestrianTracker
@@ -25,27 +28,32 @@ namespace PedestrianTracker
         private SkeletonPoint lastPoint;
         private List<Point> pointList;
 
+        //For drawing the trajectory
         private PathSegmentCollection trajectoryPathSegments;
         private PathFigure trajectoryPathFigure;
         private PathFigureCollection trajectoryPathFigureCollection;
         private PathGeometry trajectoryPathGeometry;
 
         private FormattedText trajectoryText;
-
-        private Brush TrajectoryBrush;
         
-
+        //Brushes
+        private Brush TrajectoryBrush;
         private readonly Brush centerPointBrush = Brushes.Black;
-        private Brush TrajectoryTextBrush = Brushes.Gray;
+        private readonly Brush TrajectoryTextBrush = Brushes.Gray;
 
+        //Drawing Constants
         private const double BodyCenterThickness = 8;
-
         private const double textOffset = 10;
 
         private int frameIteration = 0;
-
         private double deltaDistance = 0;
-        public double velocity = 0;
+        public double velocity  = 0;
+        private float deltaX = 0;
+        public string Direction = "NA";
+  
+        private readonly string filepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+
+        private System.Data.SqlClient.SqlConnection connection;
    
         public string Name
         {
@@ -69,6 +77,7 @@ namespace PedestrianTracker
             this.trajectoryPathGeometry = null;
             this.Distance = 0.0;
             this.velocity = 0.0;
+            this.Direction = "NA";
 
             InvalidateVisual();
         }
@@ -136,6 +145,10 @@ namespace PedestrianTracker
 
                 try
                 {
+                    deltaX = thisPoint.X - lastPoint.X;
+
+                    Direction = deltaX > 0 ? "Right" : "Left";
+
                     deltaDistance = Math.Sqrt(Math.Pow(((double)thisPoint.X - (double)lastPoint.X), 2.0)
                                                         + Math.Pow(((double)thisPoint.Y - (double)lastPoint.Y), 2.0)
                                                         + Math.Pow(((double)thisPoint.Z - (double)lastPoint.Z), 2.0));
@@ -205,6 +218,35 @@ namespace PedestrianTracker
             this.InvalidateVisual();
         }
 
+        private void saveData()
+        {
+            connection = new SqlConnection();
+            connection.ConnectionString = "Data Source=|DataDirectory|\\trajectoryData.sdf";
+            connection.Open();
+            
+        }
+
+        public static void HandleConnection(SqlConnection oCn)
+        {
+            //do a switch on the state of the connection
+            switch (oCn.State)
+            {
+                case System.Data.ConnectionState.Open: //the connection is open
+                    //close then re-open
+                    oCn.Close();
+                    oCn.Open();
+                    break;
+                case System.Data.ConnectionState.Closed: //connection is open
+                    //open the connection
+                    oCn.Open();
+                    break;
+                default:
+                    oCn.Close();
+                    oCn.Open();
+                    break;
+            }
+        }
+
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
@@ -222,7 +264,7 @@ namespace PedestrianTracker
                 {
                     //TrajectoryTextBrush.Opacity = .5;
 
-                    trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity: " + this.velocity.ToString("#.##" + " m/s"),
+                    trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity: " + this.velocity.ToString("#.##" + " m/s") + "\nDirection: " + this.Direction,
                                                 CultureInfo.GetCultureInfo("en-us"),
                                                 FlowDirection.LeftToRight,
                                                 new Typeface("Verdana"),
@@ -244,7 +286,8 @@ namespace PedestrianTracker
                     return;
                 }
             }
-                
+            
+            //To draw trajectory only if there is something to draw and if the skeleton is tracked
             if (trajectoryPathGeometry != null && currentSkeleton != null & currentSkeleton.TrackingState!=SkeletonTrackingState.NotTracked)
             {
                 drawingContext.DrawGeometry(null, new Pen(this.TrajectoryBrush,2), this.trajectoryPathGeometry);
