@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
+using System.Data.SqlClient;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,18 +46,16 @@ namespace PedestrianTracker
 
         Skeleton[] skeletons = new Skeleton[numberOfSkeletons];
 
-        //Trajectory info
-        //private Dictionary<int,List<Point>> trajectory = new Dictionary<int,List<Point>>();
-        //private PathFigure trajectoryPathFigure = new PathFigure();
-        //private PathSegmentCollection trajectoryPathSegments = new PathSegmentCollection();
-        //private LineSegment currentLineSegment = new LineSegment();
-        //private PathGeometry trajectoryPathGeometry = new PathGeometry();
-        //private PathFigureCollection trajectoryPathFigureCollection = new PathFigureCollection();
-        //private Path trajectoryPath = new Path();
 
         private List<Trajectory> trajectories;
 
         private Trajectory trajectoryCanvas;
+
+        //Database stuff
+        private System.Data.SqlClient.SqlConnection connection;
+        public const string connectionString = @"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\TrajectoryDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True";
+        private TrajectoryDbDataSet ds;
+        private TrajectoryDbDataSetTableAdapters.Trajectory1TableAdapter da;
 
         //Dependency Properties
         public static readonly DependencyProperty TotalPlayersProperty =
@@ -97,12 +97,6 @@ namespace PedestrianTracker
             set { SetValue(SkeletonYProperty, value); }
         }
 
-        //public double Distance
-        //{
-        //    get { return (double)GetValue(DistanceProperty); }
-        //    set { SetValue(DistanceProperty, value); }
-        //}
-
         public MainWindow()
         {
             InitializeComponent();
@@ -113,6 +107,8 @@ namespace PedestrianTracker
         {
             this.drawingGroup = new DrawingGroup();
             this.imageSource = new DrawingImage(drawingGroup);
+
+
             //SkeletonImage.Source = this.imageSource;
 
             loadKinect();
@@ -276,8 +272,9 @@ namespace PedestrianTracker
                             //Minimum distance threshold to count those that have been tracked long enough
                             if (trajectoryCanvas.Distance > DistanceThreshold)
                             {
-                                Debug.WriteLine("Distance " + trajectoryCanvas.Distance);
+                                //Debug.WriteLine("Distance " + trajectoryCanvas.Distance);
                                 PedestrianCounts++;
+                                Debug.WriteLine("number of rows added: " + trajectoryCanvas.updateDatabase());
                             }
 
                             trajectoryCanvas.Reset();
@@ -422,5 +419,54 @@ namespace PedestrianTracker
                         this.trajectoryCanvas6
                     };
         }
+
+        //private void fillDataSet()
+        //{
+        //    connection = new SqlConnection(connectionString);
+        //    dsTrajectory = new DataSet();
+
+        //    daTrajectory = new SqlDataAdapter("select * from Trajectory1", connection);
+        //    SqlCommandBuilder command = new SqlCommandBuilder(daTrajectory);
+        //    try
+        //    {
+        //        //connection.Open();
+        //        daTrajectory.Fill(dsTrajectory, "Trajectory1");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return;
+        //    }
+
+        //}
+
+        //private void writeOneRow()
+        //{
+            
+        //    ds = new TrajectoryDbDataSet();
+        //    da = new TrajectoryDbDataSetTableAdapters.Trajectory1TableAdapter();
+
+        //    try
+        //    {
+
+        //        da.Fill(ds.Trajectory1);
+        //        MessageBox.Show(ds.Trajectory1.Rows.Count.ToString());
+        //        ds.Trajectory1.AddTrajectory1Row(1,1,1,1,1,1,"Center");
+
+        //        MessageBox.Show(ds.Trajectory1.Rows.Count.ToString());
+        //        int result = da.Update(ds);
+        //        ds.AcceptChanges();
+        //        da.Fill(ds.Trajectory1);
+        //        MessageBox.Show(result.ToString());
+        //        da.Connection.Close();
+
+        //        //con.Close();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        // Error during Update, add code to locate error, reconcile 
+        //        // and try to update again.
+        //        Debug.WriteLine("-----------Exception: " + e);
+        //    }
+        //}
     }
 }

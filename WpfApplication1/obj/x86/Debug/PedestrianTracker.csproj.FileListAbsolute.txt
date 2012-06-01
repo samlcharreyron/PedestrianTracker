@@ -15,4 +15,5 @@ C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\Ge
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\PedestrianTracker.exe.config
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker_Content.g.cs
-C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\trajectoryData.sdf
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\TrajectoryDb.mdf
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\TrajectoryDb_log.ldf

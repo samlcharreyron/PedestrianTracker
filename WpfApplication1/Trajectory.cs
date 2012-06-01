@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,6 +46,13 @@ namespace PedestrianTracker
         private const double BodyCenterThickness = 8;
         private const double textOffset = 10;
 
+        //Saving data
+        private SqlConnection connection;
+        private string tableName;
+        private TrajectoryDbDataSet ds;
+        private SqlDataAdapter da;
+        private SqlCommandBuilder cmdBuilder;
+
         private int frameIteration = 0;
         private double deltaDistance = 0;
         public double velocity  = 0;
@@ -52,8 +60,6 @@ namespace PedestrianTracker
         public string Direction = "NA";
   
         private readonly string filepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-
-        private System.Data.SqlClient.SqlConnection connection;
    
         public string Name
         {
@@ -157,6 +163,14 @@ namespace PedestrianTracker
                     {
                         Distance += deltaDistance;
                         velocity = deltaDistance * 10;
+
+                        //load data first
+                        if (ds == null)
+                        {
+                            LoadData();
+                        }
+
+                        addRow(thisPoint, Distance, deltaDistance, velocity, Direction);
                     }
                 }
                 catch
@@ -218,34 +232,78 @@ namespace PedestrianTracker
             this.InvalidateVisual();
         }
 
-        private void saveData()
-        {
-            connection = new SqlConnection();
-            connection.ConnectionString = "Data Source=|DataDirectory|\\trajectoryData.sdf";
-            connection.Open();
-            
-        }
+        //Private saving data
 
-        public static void HandleConnection(SqlConnection oCn)
+        public void LoadData()
         {
-            //do a switch on the state of the connection
-            switch (oCn.State)
+            using (connection = new SqlConnection(MainWindow.connectionString))
             {
-                case System.Data.ConnectionState.Open: //the connection is open
-                    //close then re-open
-                    oCn.Close();
-                    oCn.Open();
-                    break;
-                case System.Data.ConnectionState.Closed: //connection is open
-                    //open the connection
-                    oCn.Open();
-                    break;
-                default:
-                    oCn.Close();
-                    oCn.Open();
-                    break;
+                connection.Open();
+
+                this.tableName = "Trajectory" + trackedSkeleton;
+
+                using (da = new SqlDataAdapter(String.Format("Select * from {0}", tableName), MainWindow.connectionString))
+                {
+                    this.ds = new TrajectoryDbDataSet();
+                    this.cmdBuilder = new SqlCommandBuilder(da);
+                    da.Fill(ds, tableName);
+                }
             }
         }
+
+        public void addRow(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction)
+        {
+            try
+            {
+                switch (trackedSkeleton)
+                {
+                    case 1:
+                        ds.Trajectory1.AddTrajectory1Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+                        break;
+                    case 2:
+                        ds.Trajectory2.AddTrajectory2Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+                        break;
+                    case 3:
+                        ds.Trajectory3.AddTrajectory3Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+                        break;
+                    case 4:
+                        ds.Trajectory4.AddTrajectory4Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+                        break;
+                    case 5:
+                        ds.Trajectory5.AddTrajectory5Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+                        break;
+                    case 6:
+                        ds.Trajectory6.AddTrajectory6Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+                        break;
+                }
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        public int updateDatabase()
+        {
+            using (connection = new SqlConnection(MainWindow.connectionString))
+            {
+                connection.Open();
+
+                this.tableName = "Trajectory" + trackedSkeleton;
+
+                using (da = new SqlDataAdapter(String.Format("Select * from {0}", tableName), MainWindow.connectionString))
+                {
+                    this.cmdBuilder = new SqlCommandBuilder(da);
+
+                    if (ds != null)
+                    {
+                        return da.Update(ds, tableName);
+                    }
+                    else return 0;
+                }
+            }
+        }
+
 
         protected override void OnRender(DrawingContext drawingContext)
         {

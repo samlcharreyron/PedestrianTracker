@@ -76,11 +76,25 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="MyRender.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Trajectory.cs" />
+    <Compile Include="trajectoryDataSet.cs">
+      <DependentUpon>trajectoryDataSet.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="trajectoryDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>trajectoryDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="TrajectoryDbDataSet.cs">
+      <DependentUpon>TrajectoryDbDataSet.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TrajectoryDbDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TrajectoryDbDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="VisibilityConverter.cs" />
     <Page Include="MainWindow.xaml">
@@ -124,12 +138,23 @@
       <DependentUpon>trajectoryDataSet.xsd</DependentUpon>
     </None>
     <None Include="trajectoryDataSet.xsd">
+      <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>trajectoryDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </None>
     <None Include="trajectoryDataSet.xss">
       <DependentUpon>trajectoryDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="TrajectoryDbDataSet.xsc">
+      <DependentUpon>TrajectoryDbDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="TrajectoryDbDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>TrajectoryDbDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="TrajectoryDbDataSet.xss">
+      <DependentUpon>TrajectoryDbDataSet.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -170,8 +195,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="trajectoryData.sdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="TrajectoryDb.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TrajectoryDb_log.ldf">
+      <DependentUpon>TrajectoryDb.mdf</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
