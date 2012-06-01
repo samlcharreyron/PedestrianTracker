@@ -49,15 +49,23 @@ namespace PedestrianTracker
         //Saving data
         private SqlConnection connection;
         private string tableName;
-        private TrajectoryDbDataSet ds;
+        //private TrajectoryDbDataSet ds;
         private SqlDataAdapter da;
         private SqlCommandBuilder cmdBuilder;
+        private TrajectoryDbDataSet.trajectoriesRow t_key;
+        private int t_id;
 
         private int frameIteration = 0;
         private double deltaDistance = 0;
         public double velocity  = 0;
         private float deltaX = 0;
-        public string Direction = "NA";
+        public string Direction = "N";
+
+        //Averages
+        private double averageVelocity = 0;
+        private List<int> directionSum = new List<int>(); 
+        private string averageDirection = "N";
+
   
         private readonly string filepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
    
@@ -153,7 +161,10 @@ namespace PedestrianTracker
                 {
                     deltaX = thisPoint.X - lastPoint.X;
 
-                    Direction = deltaX > 0 ? "Right" : "Left";
+                    Direction = deltaX > 0 ? "R" : "L";
+
+                    //Average Direction
+                    directionSum.Add(Direction.Equals("R") ? 1 : 0);
 
                     deltaDistance = Math.Sqrt(Math.Pow(((double)thisPoint.X - (double)lastPoint.X), 2.0)
                                                         + Math.Pow(((double)thisPoint.Y - (double)lastPoint.Y), 2.0)
@@ -165,12 +176,14 @@ namespace PedestrianTracker
                         velocity = deltaDistance * 10;
 
                         //load data first
-                        if (ds == null)
+                        if (Globals.ds == null)
                         {
-                            LoadData();
+                            Globals.ds = new TrajectoryDbDataSet();
                         }
 
-                        addRow(thisPoint, Distance, deltaDistance, velocity, Direction);
+                        addPoint(thisPoint, Distance, deltaDistance, velocity, Direction, t_key);
+
+                        //addRow(thisPoint, Distance, deltaDistance, velocity, Direction);
                     }
                 }
                 catch
@@ -221,6 +234,12 @@ namespace PedestrianTracker
             this.trajectoryPathFigureCollection.Add(trajectoryPathFigure);
             this.trajectoryPathGeometry = new PathGeometry(trajectoryPathFigureCollection);
 
+            //At first point add trajectory row to dataset
+            if (pointList.Count == 1)
+            {
+                addTrajectory();
+            }
+            
             //if only one point do not calculate the distance
             if (pointList.Count > 1)
             {
@@ -234,48 +253,44 @@ namespace PedestrianTracker
 
         //Private saving data
 
-        public void LoadData()
+        //public void LoadData()
+        //{
+        //    using (connection = new SqlConnection(MainWindow.connectionString))
+        //    {
+        //        connection.Open();
+
+        //        this.tableName = "Trajectory" + trackedSkeleton;
+
+        //        using (da = new SqlDataAdapter(String.Format("Select * from {0}", tableName), MainWindow.connectionString))
+        //        {
+        //            this.ds = new TrajectoryDbDataSet();
+        //            this.cmdBuilder = new SqlCommandBuilder(da);
+        //            da.Fill(ds, tableName);
+        //        }
+        //    }
+        //}
+
+        public void loadPointData()
         {
             using (connection = new SqlConnection(MainWindow.connectionString))
             {
                 connection.Open();
 
-                this.tableName = "Trajectory" + trackedSkeleton;
-
-                using (da = new SqlDataAdapter(String.Format("Select * from {0}", tableName), MainWindow.connectionString))
+                using (da = new SqlDataAdapter("points", MainWindow.connectionString))
                 {
-                    this.ds = new TrajectoryDbDataSet();
+                    Globals.ds = new TrajectoryDbDataSet();
                     this.cmdBuilder = new SqlCommandBuilder(da);
-                    da.Fill(ds, tableName);
+                    da.Fill(Globals.ds, "points");
                 }
             }
         }
 
-        public void addRow(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction)
+        // Add one point to points table, must refer to a trajectory in trajectories table
+        public void addPoint(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction, TrajectoryDbDataSet.trajectoriesRow t_key)
         {
             try
             {
-                switch (trackedSkeleton)
-                {
-                    case 1:
-                        ds.Trajectory1.AddTrajectory1Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-                        break;
-                    case 2:
-                        ds.Trajectory2.AddTrajectory2Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-                        break;
-                    case 3:
-                        ds.Trajectory3.AddTrajectory3Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-                        break;
-                    case 4:
-                        ds.Trajectory4.AddTrajectory4Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-                        break;
-                    case 5:
-                        ds.Trajectory5.AddTrajectory5Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-                        break;
-                    case 6:
-                        ds.Trajectory6.AddTrajectory6Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-                        break;
-                }
+                Globals.ds.points.AddpointsRow(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction, (byte) trackedSkeleton, t_key);
             }
             catch
             {
@@ -283,26 +298,116 @@ namespace PedestrianTracker
             }
         }
 
-        public int updateDatabase()
+
+        // When starting a new trajectory, call this.  It should add a new row to the trajectories dataset with junk data that will be updated once trajectory is over
+        public void addTrajectory()
         {
-            using (connection = new SqlConnection(MainWindow.connectionString))
+            if (Globals.ds == null)
             {
-                connection.Open();
+                Globals.ds = new TrajectoryDbDataSet();
+            }
 
-                this.tableName = "Trajectory" + trackedSkeleton;
+            try
+            {
+                this.t_key =  Globals.ds.trajectories.AddtrajectoriesRow((byte)trackedSkeleton, DateTime.Now, DateTime.Now, 0, "N", 0);
 
-                using (da = new SqlDataAdapter(String.Format("Select * from {0}", tableName), MainWindow.connectionString))
-                {
-                    this.cmdBuilder = new SqlCommandBuilder(da);
-
-                    if (ds != null)
-                    {
-                        return da.Update(ds, tableName);
-                    }
-                    else return 0;
-                }
+                //Store this trajectory's row primary key
+                this.t_id = t_key.t_id;
+            }
+            catch (Exception e)
+            {
+                return;
             }
         }
+
+        //At the end of a trajectory, this updates the row with final info
+        public void updateTrajectory()
+        {
+            try
+            {
+                TrajectoryDbDataSet.trajectoriesRow currentRow = Globals.ds.trajectories.FindByt_id(this.t_id);
+                
+                //update row with final values
+                currentRow.end_time = DateTime.Now;
+
+                //Average velocity and direction
+                double velocitySum = 0;
+                int directionSum = 0;
+                int rows = 0;
+
+                foreach (DataRow row in Globals.ds.points.Select(String.Format("t_id = {0}", t_id)))
+                {
+                    velocitySum += (double)row[5];
+                    directionSum += Direction.Equals("R") ? 1 : 0;
+                    
+                    rows++;
+                }
+
+                currentRow.average_velocity = velocitySum/rows;
+                currentRow.average_direction = (directionSum/rows > 0.5) ? "R" : "L";
+                currentRow.length = this.Distance;
+
+            }
+
+            catch (Exception e)
+            {
+                return;
+            }
+        }
+
+
+        //public void addRow(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction)
+        //{
+        //    try
+        //    {
+        //        switch (trackedSkeleton)
+        //        {
+        //            case 1:
+        //                ds.Trajectory1.AddTrajectory1Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+        //                break;
+        //            case 2:
+        //                ds.Trajectory2.AddTrajectory2Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+        //                break;
+        //            case 3:
+        //                ds.Trajectory3.AddTrajectory3Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+        //                break;
+        //            case 4:
+        //                ds.Trajectory4.AddTrajectory4Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+        //                break;
+        //            case 5:
+        //                ds.Trajectory5.AddTrajectory5Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+        //                break;
+        //            case 6:
+        //                ds.Trajectory6.AddTrajectory6Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
+        //                break;
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        return;
+        //    }
+        //}
+
+        //public int updateDatabase()
+        //{
+        //    using (connection = new SqlConnection(MainWindow.connectionString))
+        //    {
+        //        connection.Open();
+
+        //        this.tableName = "Trajectory" + trackedSkeleton;
+
+        //        using (da = new SqlDataAdapter(String.Format("Select * from {0}", tableName), MainWindow.connectionString))
+        //        {
+        //            this.cmdBuilder = new SqlCommandBuilder(da);
+
+        //            if (ds != null)
+        //            {
+        //                return da.Update(ds, tableName);
+        //            }
+        //            else return 0;
+        //        }
+        //    }
+        //}
 
 
         protected override void OnRender(DrawingContext drawingContext)

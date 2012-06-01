@@ -26,6 +26,12 @@ namespace PedestrianTracker
     /// </summary>
     /// 
 
+    public static class Globals
+    {
+        public static TrajectoryDbDataSet ds;
+    }
+
+
     public partial class MainWindow : Window
     {
         private KinectSensor myKinect;
@@ -54,8 +60,7 @@ namespace PedestrianTracker
         //Database stuff
         private System.Data.SqlClient.SqlConnection connection;
         public const string connectionString = @"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\TrajectoryDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True";
-        private TrajectoryDbDataSet ds;
-        private TrajectoryDbDataSetTableAdapters.Trajectory1TableAdapter da;
+        
 
         //Dependency Properties
         public static readonly DependencyProperty TotalPlayersProperty =
@@ -118,6 +123,7 @@ namespace PedestrianTracker
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            updateDatabase();
             myKinect.Stop();
         }
 
@@ -233,12 +239,7 @@ namespace PedestrianTracker
                     errorMessage += "Unable to copy over skeleton data";
                 }
 
-                //Distance = trajectoryCanvas1.Distance;
-
-            //}
-
-            //using (DrawingContext dc = drawingGroup.Open())
-            //{
+                
                 //Make sure counter starts from 0 every frame
                 TotalPlayers = 0;
 
@@ -272,9 +273,10 @@ namespace PedestrianTracker
                             //Minimum distance threshold to count those that have been tracked long enough
                             if (trajectoryCanvas.Distance > DistanceThreshold)
                             {
-                                //Debug.WriteLine("Distance " + trajectoryCanvas.Distance);
                                 PedestrianCounts++;
-                                Debug.WriteLine("number of rows added: " + trajectoryCanvas.updateDatabase());
+
+                                trajectoryCanvas.updateTrajectory();
+                                //Debug.WriteLine("number of rows added: " + trajectoryCanvas.updateDatabase());
                             }
 
                             trajectoryCanvas.Reset();
@@ -369,20 +371,6 @@ namespace PedestrianTracker
             return pixels;
         }
 
-        private void CountPlayers(Skeleton[] skeletons)
-        {
-            TotalPlayers = 0;
-
-                foreach (Skeleton s in skeletons)
-                {
-                    if (s.TrackingState != SkeletonTrackingState.NotTracked)
-                    {
-                        TotalPlayers++;
-                        s.TrackingState = SkeletonTrackingState.PositionOnly;
-                    }
-                }
-        }
-
         private Point SkeletonPointToScreen(SkeletonPoint skelpoint)
         {
             // Convert point to depth space.  
@@ -420,53 +408,40 @@ namespace PedestrianTracker
                     };
         }
 
-        //private void fillDataSet()
-        //{
-        //    connection = new SqlConnection(connectionString);
-        //    dsTrajectory = new DataSet();
+        private int[] updateDatabase()
+        {
+            int[] result = new int[2];
 
-        //    daTrajectory = new SqlDataAdapter("select * from Trajectory1", connection);
-        //    SqlCommandBuilder command = new SqlCommandBuilder(daTrajectory);
-        //    try
-        //    {
-        //        //connection.Open();
-        //        daTrajectory.Fill(dsTrajectory, "Trajectory1");
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return;
-        //    }
+            using (connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
 
-        //}
 
-        //private void writeOneRow()
-        //{
-            
-        //    ds = new TrajectoryDbDataSet();
-        //    da = new TrajectoryDbDataSetTableAdapters.Trajectory1TableAdapter();
+                //update trajectories
+                using (TrajectoryDbDataSetTableAdapters.trajectoriesTableAdapter trajectoriesDa = new TrajectoryDbDataSetTableAdapters.trajectoriesTableAdapter())
+                {
 
-        //    try
-        //    {
+                    if (Globals.ds != null)
+                    {
+                        result[0] = trajectoriesDa.Update(Globals.ds);
+                    }
 
-        //        da.Fill(ds.Trajectory1);
-        //        MessageBox.Show(ds.Trajectory1.Rows.Count.ToString());
-        //        ds.Trajectory1.AddTrajectory1Row(1,1,1,1,1,1,"Center");
+                    using (TrajectoryDbDataSetTableAdapters.pointsTableAdapter pointsDa = new TrajectoryDbDataSetTableAdapters.pointsTableAdapter())
+                    {
 
-        //        MessageBox.Show(ds.Trajectory1.Rows.Count.ToString());
-        //        int result = da.Update(ds);
-        //        ds.AcceptChanges();
-        //        da.Fill(ds.Trajectory1);
-        //        MessageBox.Show(result.ToString());
-        //        da.Connection.Close();
+                        if (Globals.ds != null)
+                        {
+                            
+                            result [1] = pointsDa.Update(Globals.ds);
+                            
+                        }
+                    }
 
-        //        //con.Close();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        // Error during Update, add code to locate error, reconcile 
-        //        // and try to update again.
-        //        Debug.WriteLine("-----------Exception: " + e);
-        //    }
-        //}
+                }
+            }
+
+            return result;
+        }
+
     }
 }
