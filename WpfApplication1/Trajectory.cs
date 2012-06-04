@@ -67,7 +67,7 @@ namespace PedestrianTracker
         private string averageDirection = "N";
 
   
-        private readonly string filepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+        //private readonly string filepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
    
         public string Name
         {

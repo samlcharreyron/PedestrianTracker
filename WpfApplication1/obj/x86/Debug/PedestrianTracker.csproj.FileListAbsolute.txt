@@ -17,3 +17,5 @@ C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\Pedest
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker_Content.g.cs
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\TrajectoryDb.mdf
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\TrajectoryDb_log.ldf
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\TrajectoryWindow.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\TrajectoryWindow.g.cs

@@ -6,20 +6,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Pedestrian Counter"
-        MinHeight="600" MinWidth="670"
+        MinHeight="620" MinWidth="670"
         Height="600" Width="670"
         ResizeMode="CanResizeWithGrip"
-        Loaded="Window_Loaded" Closed="Window_Closed" >
+        Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" >
     <Window.Resources>
         <l:VisibilityConverter x:Key="VisibilityConverter" />
     </Window.Resources>
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition MinHeight="500" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Canvas Grid.Row="0">
-            <Image Name="image1" Grid.Row="0" Height="480" Width="640"/>
+        <DockPanel>
+        <Menu Name="menu1" Grid.Row="0" Height="22">
+            <MenuItem Header="_File" >
+                    <MenuItem Header="_Open" Click="mnuFileOpen_Click">
+                        <MenuItem.Icon>
+                            <Image Source="icons\openHS.png" Height="16" Width="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                        <MenuItem Header="_Close" />
+                    <MenuItem Header="_Save As" Click="mnuFileSaveAs_Click">
+                        <MenuItem.Icon>
+                            <Image Source="icons\saveHS.png" Height="16" Width="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                        <Separator></Separator>
+                <MenuItem Header="E_xit" Click="mnuFileExit_Click" />
+            </MenuItem>
+                <MenuItem Header="_View">
+                    <MenuItem Header="Show Tracked Data" Click="mnuViewShowTrackedData_Clicked"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <!--StackPanel Orientation="Horizontal" Grid.Row="0">
+            <TextBlock Text="Save trajectories to file    " Padding="10" VerticalAlignment="Center" />
+            <Button Content="Export" Height="23" HorizontalAlignment="Left" Name="button1" Width="75" />
+        </StackPanel -->
+        <Canvas Grid.Row="1">
+            <Image Name="image1" Height="480" Width="640"/>
             <l:Trajectory x:Name="trajectoryCanvas1" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
             <l:Trajectory x:Name="trajectoryCanvas2" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
             <l:Trajectory x:Name="trajectoryCanvas3" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
@@ -27,7 +54,7 @@
             <l:Trajectory x:Name="trajectoryCanvas5" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
             <l:Trajectory x:Name="trajectoryCanvas6" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
         </Canvas>
-        <Grid Name="MessageGrid" Grid.Row="1" Height="50" VerticalAlignment="Bottom">
+        <Grid Name="MessageGrid" Grid.Row="2" Height="50" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -43,7 +70,6 @@
                 <TextBlock Name="PedestrianCountsDisplay" Text="{Binding Path=PedestrianCounts}" FontSize="20" />
             </StackPanel>
             <TextBlock Name="errorBox" Grid.Column="1" FontSize="20" Foreground="Red" />
-            <!--TextBlock Name="PedestrianCountsDisplay" Text="{Binding Path=PedestrianCounts}" Grid.Column="1" FontSize="20" /-->
         </Grid>
     </Grid>
 </Window>

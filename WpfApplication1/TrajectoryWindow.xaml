@@ -1,0 +1,36 @@
+﻿<Window x:Class="PedestrianTracker.TrajectoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TrajectoryWindow" Height="600" Width="600"
+        Closing="Window_Closing" xmlns:my="clr-namespace:PedestrianTracker" Loaded="Window_Loaded">
+    <Window.Resources>
+        <my:TrajectoryDbDataSet x:Key="trajectoryDbDataSet" />
+        <CollectionViewSource x:Key="trajectoriesViewSource" Source="{Binding Path=trajectories, Source={StaticResource trajectoryDbDataSet}}" />
+    </Window.Resources>
+    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" Height="548" ItemsSource="{Binding Source={StaticResource trajectoriesViewSource}}" Name="trajectoriesDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" Width="569" SelectionChanged="trajectoriesDataGrid_SelectionChanged">
+        <DataGrid.Columns>
+            <DataGridTextColumn x:Name="skeletonColumn" Binding="{Binding Path=skeleton}" Header="skeleton" Width="SizeToHeader" />
+            <DataGridTextColumn x:Name="start_timeColumn" Header="start time" Binding="{Binding Path=start_time}" Width="80" />
+            <DataGridTextColumn x:Name="end_timeColumn" Header="end time" Binding="{Binding Path=end_time}" Width="80" />
+             
+            <!--DataGridTemplateColumn x:Name="start_timeColumn" Header="start time" Width="SizeToHeader">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <DatePicker SelectedDate="{Binding Path=start_time, Mode=TwoWay, ValidatesOnExceptions=true, NotifyOnValidationError=true}" />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn -->
+            <!--DataGridTemplateColumn x:Name="end_timeColumn" Header="end time" Width="SizeToHeader">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <DatePicker SelectedDate="{Binding Path=end_time, Mode=TwoWay, ValidatesOnExceptions=true, NotifyOnValidationError=true}" />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn-->
+            <DataGridTextColumn x:Name="average_velocityColumn" Binding="{Binding Path=average_velocity}" Header="average velocity" Width="SizeToHeader" />
+            <DataGridTextColumn x:Name="average_directionColumn" Binding="{Binding Path=average_direction}" Header="average direction" Width="SizeToHeader" />
+            <DataGridTextColumn x:Name="lengthColumn" Binding="{Binding Path=length}" Header="length" Width="SizeToHeader" />
+            <DataGridTextColumn x:Name="t_idColumn" Binding="{Binding Path=t_id}" Header="t id" IsReadOnly="True" Width="SizeToHeader" />
+        </DataGrid.Columns>
+    </DataGrid>
+</Window>

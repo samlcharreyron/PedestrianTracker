@@ -26,11 +26,6 @@ namespace PedestrianTracker
     /// </summary>
     /// 
 
-    public static class Globals
-    {
-        public static TrajectoryDbDataSet ds;
-    }
-
 
     public partial class MainWindow : Window
     {
@@ -45,6 +40,9 @@ namespace PedestrianTracker
         private const int numberOfSkeletons = 6;
 
         private const double DistanceThreshold = 0.1;
+
+        //Windows
+        TrajectoryWindow tw1;
 
         //Drawing
         private readonly Brush centerPointBrush = Brushes.Black;
@@ -113,12 +111,21 @@ namespace PedestrianTracker
             this.drawingGroup = new DrawingGroup();
             this.imageSource = new DrawingImage(drawingGroup);
 
+            Globals.ds = new TrajectoryDbDataSet();
+            tw1 = new TrajectoryWindow();
+
+            TotalPlayers = 0;
+            PedestrianCounts = 0;
 
             //SkeletonImage.Source = this.imageSource;
 
             loadKinect();
-            TotalPlayers = 0;
-            PedestrianCounts = 0;
+       
+        }
+
+        private void Window_Closing(object sender, EventArgs e)
+        {
+            tw1.Close();
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -441,6 +448,43 @@ namespace PedestrianTracker
             }
 
             return result;
+        }
+
+
+        /*
+         * Menu Event Handlers
+         * 
+         */
+
+        private void mnuFileExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void mnuFileOpen_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void mnuFileSaveAs_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog saveFileDialog1 = new Microsoft.Win32.SaveFileDialog();
+            Nullable<bool> result = saveFileDialog1.ShowDialog();
+
+            if (result == true)
+            {
+                string saveFileName = saveFileDialog1.FileName;
+            }
+        }
+
+        private void mnuViewShowTrackedData_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (tw1 == null)
+            {
+                tw1 = new TrajectoryWindow();
+            }
+
+            tw1.Show();
+
         }
 
     }
