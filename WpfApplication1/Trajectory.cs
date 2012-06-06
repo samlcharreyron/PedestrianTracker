@@ -29,6 +29,10 @@ namespace PedestrianTracker
         private SkeletonPoint lastPoint;
         private List<Point> pointList;
 
+        //For measuring time
+        private DateTime lastTime, currentTime;
+        private int deltaTime;
+
         //For drawing the trajectory
         private PathSegmentCollection trajectoryPathSegments;
         private PathFigure trajectoryPathFigure;
@@ -65,6 +69,9 @@ namespace PedestrianTracker
         private double averageVelocity = 0;
         private List<int> directionSum = new List<int>(); 
         private string averageDirection = "N";
+
+        //For showing past trajectories
+        public bool showPastTrajectories = false;
 
   
         //private readonly string filepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
@@ -149,7 +156,7 @@ namespace PedestrianTracker
             }
         }
 
-        private void IncrementDistance(SkeletonPoint lastPoint, SkeletonPoint thisPoint)
+        private void IncrementDistance(SkeletonPoint thisPoint)
         {
             //Implement subsampling of distance to every 10 frames
 
@@ -157,7 +164,8 @@ namespace PedestrianTracker
             {
                 frameIteration = 0;
 
-                try
+
+                if (lastPoint != null)
                 {
                     deltaX = thisPoint.X - lastPoint.X;
 
@@ -169,11 +177,18 @@ namespace PedestrianTracker
                     deltaDistance = Math.Sqrt(Math.Pow(((double)thisPoint.X - (double)lastPoint.X), 2.0)
                                                         + Math.Pow(((double)thisPoint.Y - (double)lastPoint.Y), 2.0)
                                                         + Math.Pow(((double)thisPoint.Z - (double)lastPoint.Z), 2.0));
+                    velocity = deltaDistance * 3;
 
-                    if (deltaDistance > 0.01)
+                    if (deltaDistance > 0.005)
                     {
                         Distance += deltaDistance;
-                        velocity = deltaDistance * 10;
+
+                        //currentTime = DateTime.Now;
+                        //deltaTime = 1000 * currentTime.Subtract(lastTime).Seconds;
+
+                        //velocity = deltaDistance / currentTime.Subtract(lastTime).Seconds;
+
+                        //lastTime = currentTime;
 
                         //load data first
                         if (Globals.ds == null)
@@ -181,15 +196,13 @@ namespace PedestrianTracker
                             Globals.ds = new TrajectoryDbDataSet();
                         }
 
-                        addPoint(thisPoint, Distance, deltaDistance, velocity, Direction, t_key);
+                        addPointData(thisPoint, Distance, deltaDistance, velocity, Direction, t_key);
 
-                        //addRow(thisPoint, Distance, deltaDistance, velocity, Direction);
                     }
+
                 }
-                catch
-                {
-                    return;
-                }
+
+                lastPoint = thisPoint;
             }
 
             else frameIteration++;
@@ -243,32 +256,13 @@ namespace PedestrianTracker
             //if only one point do not calculate the distance
             if (pointList.Count > 1)
             {
-                IncrementDistance(lastPoint, currentSkeleton.Position);
+                IncrementDistance(currentSkeleton.Position);
             }
-
-            lastPoint = currentSkeleton.Position;
 
             this.InvalidateVisual();
         }
 
         //Private saving data
-
-        //public void LoadData()
-        //{
-        //    using (connection = new SqlConnection(MainWindow.connectionString))
-        //    {
-        //        connection.Open();
-
-        //        this.tableName = "Trajectory" + trackedSkeleton;
-
-        //        using (da = new SqlDataAdapter(String.Format("Select * from {0}", tableName), MainWindow.connectionString))
-        //        {
-        //            this.ds = new TrajectoryDbDataSet();
-        //            this.cmdBuilder = new SqlCommandBuilder(da);
-        //            da.Fill(ds, tableName);
-        //        }
-        //    }
-        //}
 
         public void loadPointData()
         {
@@ -286,7 +280,7 @@ namespace PedestrianTracker
         }
 
         // Add one point to points table, must refer to a trajectory in trajectories table
-        public void addPoint(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction, TrajectoryDbDataSet.trajectoriesRow t_key)
+        public void addPointData(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction, TrajectoryDbDataSet.trajectoriesRow t_key)
         {
             try
             {
@@ -309,12 +303,12 @@ namespace PedestrianTracker
 
             try
             {
-                this.t_key =  Globals.ds.trajectories.AddtrajectoriesRow((byte)trackedSkeleton, DateTime.Now, DateTime.Now, 0, "N", 0);
+                this.t_key = Globals.ds.trajectories.AddtrajectoriesRow((byte)trackedSkeleton, DateTime.Now, DateTime.Now, 0, "N", 0);
 
                 //Store this trajectory's row primary key
                 this.t_id = t_key.t_id;
             }
-            catch (Exception e)
+            catch
             {
                 return;
             }
@@ -355,60 +349,17 @@ namespace PedestrianTracker
             }
         }
 
+        private Point SkeletonPointToPoint(float X, float Y, float Z)
+        {
+            SkeletonPoint skelPoint = new SkeletonPoint();
+                        skelPoint.X = X;
+                        skelPoint.Y = Y;
+                        skelPoint.Z = Z;
 
-        //public void addRow(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction)
-        //{
-        //    try
-        //    {
-        //        switch (trackedSkeleton)
-        //        {
-        //            case 1:
-        //                ds.Trajectory1.AddTrajectory1Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-        //                break;
-        //            case 2:
-        //                ds.Trajectory2.AddTrajectory2Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-        //                break;
-        //            case 3:
-        //                ds.Trajectory3.AddTrajectory3Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-        //                break;
-        //            case 4:
-        //                ds.Trajectory4.AddTrajectory4Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-        //                break;
-        //            case 5:
-        //                ds.Trajectory5.AddTrajectory5Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-        //                break;
-        //            case 6:
-        //                ds.Trajectory6.AddTrajectory6Row(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction);
-        //                break;
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        return;
-        //    }
-        //}
+            ColorImagePoint imgPoint = MainWindow.myKinect.MapSkeletonPointToColor(skelPoint, ColorImageFormat.RgbResolution640x480Fps30);
 
-        //public int updateDatabase()
-        //{
-        //    using (connection = new SqlConnection(MainWindow.connectionString))
-        //    {
-        //        connection.Open();
-
-        //        this.tableName = "Trajectory" + trackedSkeleton;
-
-        //        using (da = new SqlDataAdapter(String.Format("Select * from {0}", tableName), MainWindow.connectionString))
-        //        {
-        //            this.cmdBuilder = new SqlCommandBuilder(da);
-
-        //            if (ds != null)
-        //            {
-        //                return da.Update(ds, tableName);
-        //            }
-        //            else return 0;
-        //        }
-        //    }
-        //}
-
+            return new Point(imgPoint.X,imgPoint.Y);
+        }
 
         protected override void OnRender(DrawingContext drawingContext)
         {
@@ -427,7 +378,8 @@ namespace PedestrianTracker
                 {
                     //TrajectoryTextBrush.Opacity = .5;
 
-                    trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity: " + this.velocity.ToString("#.##" + " m/s") + "\nDirection: " + this.Direction,
+                    trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity: " + this.velocity.ToString("#.##" + " m/s")  + "\nDirection: " + this.Direction
+                        + "\nX: " + currentSkeleton.Position.X + "  Y: " + currentSkeleton.Position.Y + "   Z: " + currentSkeleton.Position.Z,
                                                 CultureInfo.GetCultureInfo("en-us"),
                                                 FlowDirection.LeftToRight,
                                                 new Typeface("Verdana"),
@@ -454,6 +406,35 @@ namespace PedestrianTracker
             if (trajectoryPathGeometry != null && currentSkeleton != null & currentSkeleton.TrackingState!=SkeletonTrackingState.NotTracked)
             {
                 drawingContext.DrawGeometry(null, new Pen(this.TrajectoryBrush,2), this.trajectoryPathGeometry);
+            }
+
+            //Draw past trajectories if requested
+            if (showPastTrajectories)
+            {
+                trajectoryPathFigureCollection = new PathFigureCollection();
+
+                foreach (TrajectoryDbDataSet.trajectoriesRow row in Globals.ds.trajectories.Rows)
+                {
+                    DataRow[] pointsRows = Globals.ds.points.Select("t_id = " + row.t_id);
+
+                    PathSegmentCollection segs = new PathSegmentCollection();
+                    Point firstPoint = SkeletonPointToPoint((float)pointsRows[0][0],(float)pointsRows[0][1],(float)pointsRows[0][2]);
+
+                    foreach (DataRow pointRow in pointsRows)
+                    {
+                        Point point = SkeletonPointToPoint((float)pointRow[0],(float)pointRow[1],(float)pointRow[2]);
+
+                        segs.Add(new LineSegment(point, true));
+                    }
+
+                    PathFigure fig = new PathFigure(firstPoint,segs, false);
+                    trajectoryPathFigureCollection.Add(fig);
+                }
+
+                PathGeometry geometry = new PathGeometry(trajectoryPathFigureCollection);
+                drawingContext.DrawGeometry(null, new Pen(this.TrajectoryBrush,2), geometry);
+                    
+                
             }
         }
 

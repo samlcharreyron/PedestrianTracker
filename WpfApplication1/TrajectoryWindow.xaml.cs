@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
+using System.ComponentModel;
 
 namespace PedestrianTracker
 {
@@ -34,20 +35,21 @@ namespace PedestrianTracker
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //this.trajectoriesDataGrid.DataContext = Globals.ds.trajectories;
+            
+            BindingListCollectionView view = CollectionViewSource.GetDefaultView(Globals.ds.trajectories) as BindingListCollectionView;
 
-            TrajectoryDbDataSet trajectoryDbDataSet = Globals.ds;
-            // Load data into the table trajectories. You can modify this code as needed.
-            //TrajectoryDbDataSetTableAdapters.trajectoriesTableAdapter trajectoryDbDataSettrajectoriesTableAdapter = new TrajectoryDbDataSetTableAdapters.trajectoriesTableAdapter();
-            //trajectoryDbDataSettrajectoriesTableAdapter.ClearBeforeFill = false;
-            //trajectoryDbDataSettrajectoriesTableAdapter.Fill(trajectoryDbDataSet.trajectories);
-            this.trajectoriesDataGrid.ItemsSource = Globals.ds.trajectories;
-            //CollectionViewSource trajectoriesViewSource = ((CollectionViewSource)(this.FindResource("trajectoriesViewSource")));
-            //trajectoriesViewSource.View.MoveCurrentToFirst();
+            view.CustomFilter = "length > 0";
+
+            this.trajectoriesDataGrid.ItemsSource = view;
+
+
         }
 
         private void trajectoriesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-        }
+        }       
+
     }
 }

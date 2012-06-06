@@ -2,6 +2,9 @@
     
     
     public partial class TrajectoryDbDataSet {
+        partial class trajectoriesDataTable
+        {
+        }
     }
 }
 

@@ -79,15 +79,6 @@
     <Compile Include="MyRender.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Trajectory.cs" />
-    <Compile Include="trajectoryDataSet.cs">
-      <DependentUpon>trajectoryDataSet.xsd</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="trajectoryDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>trajectoryDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="TrajectoryDbDataSet.cs">
       <DependentUpon>TrajectoryDbDataSet.xsd</DependentUpon>
       <SubType>Component</SubType>
@@ -142,17 +133,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="trajectoryDataSet.xsc">
-      <DependentUpon>trajectoryDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="trajectoryDataSet.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>trajectoryDataSet.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="trajectoryDataSet.xss">
-      <DependentUpon>trajectoryDataSet.xsd</DependentUpon>
-    </None>
     <None Include="TrajectoryDbDataSet.xsc">
       <DependentUpon>TrajectoryDbDataSet.xsd</DependentUpon>
     </None>

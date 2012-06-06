@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,7 @@ namespace PedestrianTracker
 
     public partial class MainWindow : Window
     {
-        private KinectSensor myKinect;
+        public static KinectSensor myKinect;
         private string errorMessage;
         private DrawingGroup drawingGroup;
         private DrawingImage imageSource;
@@ -291,8 +292,6 @@ namespace PedestrianTracker
                     }
 
                 }
-
-                //DistanceDisplay.Text = "    velocity: " + trajectoryCanvas1.velocity.ToString() + " m/s"; 
             }
         }
 
@@ -386,8 +385,8 @@ namespace PedestrianTracker
                                                                              skelpoint,
                                                                              DepthImageFormat.Resolution640x480Fps30);
             //To display X and Y values in the window
-            SkeletonX = depthPoint.X;
-            SkeletonY = depthPoint.Y;
+            //SkeletonX = depthPoint.X;
+            //SkeletonY = depthPoint.Y;
 
             return new Point(depthPoint.X, depthPoint.Y);
         }
@@ -463,16 +462,103 @@ namespace PedestrianTracker
 
         private void mnuFileOpen_Click(object sender, RoutedEventArgs e)
         {
+            Microsoft.Win32.OpenFileDialog openFileDialog1 = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog1.Title = "Open Trajectory Data";
+            openFileDialog1.DefaultExt = ".csv";
+            openFileDialog1.Filter = "CSV files (*.csv)|*.txt|All files (*.*)|*.*";
+            Nullable<bool> result = openFileDialog1.ShowDialog();
+
+            if (result == true)
+            {
+                string openFileName = openFileDialog1.FileName;
+
+                using (StreamReader sr = new StreamReader(openFileName))
+                {
+                    try
+                    {
+
+                        string line;
+                        string[] row;
+                        int i = 0;
+
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            //Do not read the header
+                            if (i > 0)
+                            {
+                                row = line.Split(',');
+                                Globals.ds.trajectories.Rows.Add(row);
+                            }
+                            
+                            i++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+                }
+               }
         }
 
         private void mnuFileSaveAs_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.SaveFileDialog saveFileDialog1 = new Microsoft.Win32.SaveFileDialog();
+            saveFileDialog1.Title = "Save Trajectory Data";
+            saveFileDialog1.DefaultExt = ".csv";
+            saveFileDialog1.Filter = "CSV files (*.csv)|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.FileName = "trajectories.csv";
+
             Nullable<bool> result = saveFileDialog1.ShowDialog();
 
             if (result == true)
             {
                 string saveFileName = saveFileDialog1.FileName;
+
+                try
+                {
+                    // Create the CSV file to which grid data will be exported.
+
+                    StreamWriter sw = new StreamWriter(saveFileName, false);
+                    // First we will write the headers.
+                    DataTable dt = Globals.ds.trajectories;
+                    int iColCount = dt.Columns.Count;
+                    for (int i = 0; i < iColCount; i++)
+                    {
+                        sw.Write(dt.Columns[i]);
+                        if (i < iColCount - 1)
+                        {
+                            sw.Write(",");
+                        }
+                    }
+                    sw.Write(sw.NewLine);
+
+                    // Now write all the rows.
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        for (int i = 0; i < iColCount; i++)
+                        {
+                            if (!Convert.IsDBNull(dr[i]))
+                            {
+                                sw.Write(dr[i].ToString());
+                            }
+                            if (i < iColCount - 1)
+                            {
+                                sw.Write(",");
+                            }
+                        }
+
+                        sw.Write(sw.NewLine);
+                    }
+                    sw.Close();
+
+                    MessageBox.Show("Trajectories succesfully saved to CSV file");
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -485,6 +571,14 @@ namespace PedestrianTracker
 
             tw1.Show();
 
+        }
+
+        private void mnuViewShowPastTrajectories_Checked(object sender, RoutedEventArgs e)
+        {
+            foreach (Trajectory trajectoryCanvas in trajectories)
+            {
+                trajectoryCanvas.showPastTrajectories = true;
+            }
         }
 
     }

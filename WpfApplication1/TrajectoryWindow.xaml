@@ -1,7 +1,7 @@
 ﻿<Window x:Class="PedestrianTracker.TrajectoryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="TrajectoryWindow" Height="600" Width="600"
+        Title="Trajectory Data" Height="600" Width="600"
         Closing="Window_Closing" xmlns:my="clr-namespace:PedestrianTracker" Loaded="Window_Loaded">
     <Window.Resources>
         <my:TrajectoryDbDataSet x:Key="trajectoryDbDataSet" />
@@ -10,8 +10,8 @@
     <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" Height="548" ItemsSource="{Binding Source={StaticResource trajectoriesViewSource}}" Name="trajectoriesDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" Width="569" SelectionChanged="trajectoriesDataGrid_SelectionChanged">
         <DataGrid.Columns>
             <DataGridTextColumn x:Name="skeletonColumn" Binding="{Binding Path=skeleton}" Header="skeleton" Width="SizeToHeader" />
-            <DataGridTextColumn x:Name="start_timeColumn" Header="start time" Binding="{Binding Path=start_time}" Width="80" />
-            <DataGridTextColumn x:Name="end_timeColumn" Header="end time" Binding="{Binding Path=end_time}" Width="80" />
+            <DataGridTextColumn x:Name="start_timeColumn" Header="start time" Binding="{Binding Path=start_time, StringFormat={}{0:hh:mm:ss.fff}}" Width="80" />
+            <DataGridTextColumn x:Name="end_timeColumn" Header="end time" Binding="{Binding Path=end_time, StringFormat={}{0:hh:mm:ss.fff}}" Width="80" />
              
             <!--DataGridTemplateColumn x:Name="start_timeColumn" Header="start time" Width="SizeToHeader">
                 <DataGridTemplateColumn.CellTemplate>
