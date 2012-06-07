@@ -59,8 +59,10 @@ namespace PedestrianTracker
         //Database stuff
         private System.Data.SqlClient.SqlConnection connection;
         public const string connectionString = @"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\TrajectoryDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True";
-        
 
+        //Dataset stuff
+        private DataRow lastDataRow;
+        
         //Dependency Properties
         public static readonly DependencyProperty TotalPlayersProperty =
                 DependencyProperty.Register("TotalPlayers", typeof(int), typeof(MainWindow), new UIPropertyMetadata(0));
@@ -126,6 +128,17 @@ namespace PedestrianTracker
 
         private void Window_Closing(object sender, EventArgs e)
         {
+            if (this.lastDataRow != Globals.ds.trajectories.Rows[Globals.ds.trajectories.Rows.Count - 1])
+            {
+                MessageBoxResult result = MessageBox.Show(this, "You have unsaved trajectory data.  If you close this window, all unsaved data will be lost."
+                    , "Confirmation", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+
+                if (result != MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
             tw1.Close();
         }
 
@@ -535,8 +548,17 @@ namespace PedestrianTracker
 
                     // Now write all the rows.
 
-                    foreach (DataRow dr in dt.Rows)
+                    //foreach (DataRow dr in dt.Rows)
+                    for (int j = 0; j < dt.Rows.Count; j++)
                     {
+                        DataRow dr = dt.Rows[j];
+
+                        //Save last row
+                        if (j == dt.Rows.Count - 1)
+                        {
+                            this.lastDataRow = dr;
+                        }
+
                         for (int i = 0; i < iColCount; i++)
                         {
                             if (!Convert.IsDBNull(dr[i]))
