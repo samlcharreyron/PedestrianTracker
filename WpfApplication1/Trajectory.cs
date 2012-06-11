@@ -27,7 +27,7 @@ namespace PedestrianTracker
         private int trackedSkeleton;
         private Point currentPoint;
         private SkeletonPoint lastPoint;
-        private List<Point> pointList;
+        public List<Point> pointList;
 
         //For measuring time
         private DateTime lastTime, currentTime;
@@ -42,7 +42,7 @@ namespace PedestrianTracker
         private FormattedText trajectoryText;
         
         //Brushes
-        private Brush TrajectoryBrush;
+        private Brush TrajectoryBrush = Brushes.Red;
         private readonly Brush centerPointBrush = Brushes.Black;
         private readonly Brush TrajectoryTextBrush = Brushes.Gray;
 
@@ -52,8 +52,6 @@ namespace PedestrianTracker
 
         //Saving data
         private SqlConnection connection;
-        private string tableName;
-        //private TrajectoryDbDataSet ds;
         private SqlDataAdapter da;
         private SqlCommandBuilder cmdBuilder;
         private TrajectoryDbDataSet.trajectoriesRow t_key;
@@ -91,7 +89,7 @@ namespace PedestrianTracker
         public void Reset()
         {
             this.currentSkeleton = null;
-            this.pointList = null;
+            //this.pointList = new List<Point>();
             this.trajectoryPathSegments = null;
             this.trajectoryPathFigure = null;
             this.trajectoryPathFigureCollection = null;
@@ -349,18 +347,6 @@ namespace PedestrianTracker
             }
         }
 
-        private Point SkeletonPointToPoint(float X, float Y, float Z)
-        {
-            SkeletonPoint skelPoint = new SkeletonPoint();
-                        skelPoint.X = X;
-                        skelPoint.Y = Y;
-                        skelPoint.Z = Z;
-
-            ColorImagePoint imgPoint = MainWindow.myKinect.MapSkeletonPointToColor(skelPoint, ColorImageFormat.RgbResolution640x480Fps30);
-
-            return new Point(imgPoint.X,imgPoint.Y);
-        }
-
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
@@ -379,6 +365,7 @@ namespace PedestrianTracker
                     //TrajectoryTextBrush.Opacity = .5;
 
                     trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity: " + this.velocity.ToString("#.##" + " m/s")  + "\nDirection: " + this.Direction
+                        + "\nDistance: " + this.Distance
                         + "\nX: " + currentSkeleton.Position.X + "  Y: " + currentSkeleton.Position.Y + "   Z: " + currentSkeleton.Position.Z,
                                                 CultureInfo.GetCultureInfo("en-us"),
                                                 FlowDirection.LeftToRight,
@@ -407,35 +394,7 @@ namespace PedestrianTracker
             {
                 drawingContext.DrawGeometry(null, new Pen(this.TrajectoryBrush,2), this.trajectoryPathGeometry);
             }
-
-            //Draw past trajectories if requested
-            if (showPastTrajectories)
-            {
-                trajectoryPathFigureCollection = new PathFigureCollection();
-
-                foreach (TrajectoryDbDataSet.trajectoriesRow row in Globals.ds.trajectories.Rows)
-                {
-                    DataRow[] pointsRows = Globals.ds.points.Select("t_id = " + row.t_id);
-
-                    PathSegmentCollection segs = new PathSegmentCollection();
-                    Point firstPoint = SkeletonPointToPoint((float)pointsRows[0][0],(float)pointsRows[0][1],(float)pointsRows[0][2]);
-
-                    foreach (DataRow pointRow in pointsRows)
-                    {
-                        Point point = SkeletonPointToPoint((float)pointRow[0],(float)pointRow[1],(float)pointRow[2]);
-
-                        segs.Add(new LineSegment(point, true));
-                    }
-
-                    PathFigure fig = new PathFigure(firstPoint,segs, false);
-                    trajectoryPathFigureCollection.Add(fig);
-                }
-
-                PathGeometry geometry = new PathGeometry(trajectoryPathFigureCollection);
-                drawingContext.DrawGeometry(null, new Pen(this.TrajectoryBrush,2), geometry);
-                    
-                
-            }
+            
         }
 
     }

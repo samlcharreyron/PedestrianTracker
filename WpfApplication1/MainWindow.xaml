@@ -38,7 +38,7 @@
             </MenuItem>
                 <MenuItem Header="_View">
                     <MenuItem Header="Show Tracked Data" Click="mnuViewShowTrackedData_Clicked"/>
-                    <MenuItem Header="Show Past Trajectories" IsCheckable="True" Checked="mnuViewShowPastTrajectories_Checked" />
+                    <MenuItem Header="Show Past Trajectories" IsCheckable="True" Checked="mnuViewShowPastTrajectories_Checked" Unchecked="mnuViewShowPastTrajectories_Unchecked"/>
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -54,6 +54,7 @@
             <l:Trajectory x:Name="trajectoryCanvas4" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
             <l:Trajectory x:Name="trajectoryCanvas5" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
             <l:Trajectory x:Name="trajectoryCanvas6" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+            <Image x:Name="pastTrajectories" Width="{Binding ElementName=image1, Path=ActualWidth}" Height="{Binding ElementName=image1, Path=ActualHeight}" />
         </Canvas>
         <Grid Name="MessageGrid" Grid.Row="2" Height="50" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>

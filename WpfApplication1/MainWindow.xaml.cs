@@ -51,10 +51,11 @@ namespace PedestrianTracker
 
         Skeleton[] skeletons = new Skeleton[numberOfSkeletons];
 
-
         private List<Trajectory> trajectories;
 
         private Trajectory trajectoryCanvas;
+
+        private DrawingGroup dv;
 
         //Database stuff
         private System.Data.SqlClient.SqlConnection connection;
@@ -76,8 +77,6 @@ namespace PedestrianTracker
         public static readonly DependencyProperty SkeletonYProperty =
                 DependencyProperty.Register("SkeletonY", typeof(int), typeof(MainWindow), new UIPropertyMetadata(0));
 
-        //public static readonly DependencyProperty DistanceProperty =
-         //       DependencyProperty.Register("Distance", typeof(double), typeof(MainWindow), new UIPropertyMetadata(0));
 
         public int TotalPlayers
         {
@@ -126,16 +125,32 @@ namespace PedestrianTracker
        
         }
 
-        private void Window_Closing(object sender, EventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (this.lastDataRow != Globals.ds.trajectories.Rows[Globals.ds.trajectories.Rows.Count - 1])
+
+            bool trajectoriesNotEmpty = Globals.ds.trajectories.Rows.Count != 0;
+
+            bool lastDataRowNoMatch = false;
+
+            if (this.lastDataRow == null)
+            {
+                lastDataRowNoMatch = true;
+            }
+
+            else if (this.lastDataRow != Globals.ds.trajectories.Rows[Globals.ds.trajectories.Rows.Count - 1])
+            {
+                lastDataRowNoMatch = true;
+            }
+
+
+            if (lastDataRowNoMatch && trajectoriesNotEmpty)
             {
                 MessageBoxResult result = MessageBox.Show(this, "You have unsaved trajectory data.  If you close this window, all unsaved data will be lost."
                     , "Confirmation", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
 
                 if (result != MessageBoxResult.OK)
                 {
-                    return;
+                    e.Cancel = true;
                 }
             }
 
@@ -164,7 +179,7 @@ namespace PedestrianTracker
             try
             {
                 myKinect.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
-                myKinect.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
+                //myKinect.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
                 myKinect.SkeletonStream.Enable();
             }
 
@@ -279,6 +294,14 @@ namespace PedestrianTracker
 
                         if (s.TrackingState != SkeletonTrackingState.NotTracked)
                         {
+
+                            //If has been tracking for too long 
+                            //if (trajectoryCanvas.pointList.Count > 100)
+                            //{
+                            //    s.TrackingState = SkeletonTrackingState.NotTracked;
+                            //    trajectoryCanvas.Reset();
+                            //    continue;
+                            //}
                             
                             //set tracking state to Position Only and increment player count
                             s.TrackingState = SkeletonTrackingState.PositionOnly;
@@ -397,11 +420,19 @@ namespace PedestrianTracker
             DepthImagePoint depthPoint = myKinect.MapSkeletonPointToDepth(
                                                                              skelpoint,
                                                                              DepthImageFormat.Resolution640x480Fps30);
-            //To display X and Y values in the window
-            //SkeletonX = depthPoint.X;
-            //SkeletonY = depthPoint.Y;
-
             return new Point(depthPoint.X, depthPoint.Y);
+        }
+
+        private Point SkeletonPointToPoint(float X, float Y, float Z)
+        {
+            SkeletonPoint skelPoint = new SkeletonPoint();
+                        skelPoint.X = X;
+                        skelPoint.Y = Y;
+                        skelPoint.Z = Z;
+
+            ColorImagePoint imgPoint = myKinect.MapSkeletonPointToColor(skelPoint, ColorImageFormat.RgbResolution640x480Fps30);
+
+            return new Point(imgPoint.X ,imgPoint.Y);
         }
 
         private void DrawCenterPoint(Skeleton s, DrawingContext dc)
@@ -597,10 +628,56 @@ namespace PedestrianTracker
 
         private void mnuViewShowPastTrajectories_Checked(object sender, RoutedEventArgs e)
         {
-            foreach (Trajectory trajectoryCanvas in trajectories)
+            dv = new DrawingGroup();
+            Brush TransparentBrush = new SolidColorBrush();
+            TransparentBrush.Opacity = 0;
+            PathFigureCollection trajectoryPathFigureCollection = new PathFigureCollection();
+
+            foreach (TrajectoryDbDataSet.trajectoriesRow row in Globals.ds.trajectories.Rows)
             {
-                trajectoryCanvas.showPastTrajectories = true;
+                TrajectoryDbDataSet.pointsRow[] pointsRows = (TrajectoryDbDataSet.pointsRow[])Globals.ds.points.Select("t_id = " + row.t_id);
+
+                PathSegmentCollection segs = new PathSegmentCollection();
+
+                try
+                {
+                    Point firstPoint = SkeletonPointToPoint((float)pointsRows[0].X, (float)pointsRows[0].Y, (float)pointsRows[0].Z);
+
+                    foreach (TrajectoryDbDataSet.pointsRow pointRow in pointsRows)
+                    {
+                        Point point = SkeletonPointToPoint((float)pointRow.X, (float)pointRow.Y, (float)pointRow.Z);
+
+                        segs.Add(new LineSegment(point, true));
+                    }
+
+                    PathFigure fig = new PathFigure(firstPoint, segs, false);
+                    trajectoryPathFigureCollection.Add(fig);
+                }
+
+                catch
+                {
+                    return;
+                }
             }
+
+            PathGeometry geometry = new PathGeometry(trajectoryPathFigureCollection);
+            GeometryDrawing gd = new GeometryDrawing();
+            gd.Geometry = geometry;
+            gd.Pen = new Pen(Brushes.Red, 0.5);
+
+            pastTrajectories.Source = new DrawingImage(gd);
+
+            //using (DrawingContext drawingContext = dv.Open())
+            //{
+            //    drawingContext.DrawRectangle(Brushes.Red, null, new Rect(0, 0, RenderWidth, RenderHeight));
+            //    drawingContext.DrawGeometry(null, new Pen(Brushes.Red, 2), geometry);
+            //}
+            
+        }
+
+        private void mnuViewShowPastTrajectories_Unchecked(object sender, RoutedEventArgs e)
+        {
+            pastTrajectories.Source = null;
         }
 
     }
