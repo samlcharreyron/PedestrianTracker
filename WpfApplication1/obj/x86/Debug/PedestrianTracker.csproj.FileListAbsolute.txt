@@ -20,3 +20,5 @@ C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\Trajec
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\TrajectoryWindow.baml
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\TrajectoryWindow.g.cs
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\App.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\Options.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\Options.g.cs

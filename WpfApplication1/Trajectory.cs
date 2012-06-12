@@ -18,6 +18,7 @@ using System.Globalization;
 using System.Data.SqlClient;
 using System.Configuration;
 using Microsoft.Kinect;
+using PedestrianTracker.Properties;
 
 namespace PedestrianTracker
 {
@@ -41,11 +42,16 @@ namespace PedestrianTracker
         //private int deltaTime;
 
         //Frame subsampling for trajectory data MUST BE AN INTEGER MULTIPLE OF 30 (Frame Rate)
-        private const int FrameSub = 5;
+        private int FrameSub = 2;
 
         //Thresholds for filtering out eroneous trajectory points
         private const double MinDeltaDistance = 0.005;
         private const double MaxVelocity = 3.5;
+
+        //The angle in degrees between the road and the kinect heading (0 if tracking horizontally), 90 if tracking head on)
+        private int TrackingAngle = 0;
+        private float AngleProjectionFactorX = 1;
+        private float AngleProjectionFactorZ = 0;
 
         //For drawing the trajectory
         private PathSegmentCollection trajectoryPathSegments;
@@ -73,7 +79,7 @@ namespace PedestrianTracker
         private int frameIteration = 0;
         private double deltaDistance = 0;
         public double velocity  = 0;
-        private float deltaX = 0;
+        private float deltaP = 0;
         public string Direction = "N";
 
         public string Name
@@ -100,6 +106,10 @@ namespace PedestrianTracker
             this.Distance = 0.0;
             this.velocity = 0.0;
             this.Direction = "NA";
+            this.TrackingAngle = Properties.Settings.Default.KinectAngle;
+            this.AngleProjectionFactorX = (float)Math.Cos((TrackingAngle * Math.PI) / 180);
+            this.AngleProjectionFactorZ = (float)Math.Sin((TrackingAngle * Math.PI) / 180);
+            this.FrameSub = Properties.Settings.Default.TrajectorySubsample;
 
             InvalidateVisual();
         }
@@ -107,6 +117,7 @@ namespace PedestrianTracker
         //Adds a 2D point to the list and a segment to the current path segment
         public void AddPoint(Point point)
         {
+
             try
             {
                 if (this.pointList == null)
@@ -159,6 +170,12 @@ namespace PedestrianTracker
             }
         }
 
+
+        private float VectorToDistance(float X, float Z)
+        {
+            return (X * AngleProjectionFactorX + Z * AngleProjectionFactorZ);
+        }
+
         //Called to update the trajectory data
         private void IncrementDistance(SkeletonPoint thisPoint)
         {
@@ -173,13 +190,17 @@ namespace PedestrianTracker
                 if (lastPoint != null && (lastPoint.X != 0 && lastPoint.Y != 0 && lastPoint.Z != 0))
                 {
                     //Assumes that people are walking on a horizontal axis.  deltaX is used to determine the walking direction.
-                    deltaX = thisPoint.X - lastPoint.X;
-                    Direction = deltaX > 0 ? "R" : "L";
+                    deltaP = VectorToDistance(thisPoint.X-lastPoint.X,thisPoint.Z-lastPoint.Z);
+
+                    Direction = deltaP > 0 ? "R" : "L";
 
                     //Euclidean distance between the last sampled point and the current point
-                    deltaDistance = Math.Sqrt(Math.Pow(((double)thisPoint.X - (double)lastPoint.X), 2.0)
-                                                        + Math.Pow(((double)thisPoint.Y - (double)lastPoint.Y), 2.0)
-                                                        + Math.Pow(((double)thisPoint.Z - (double)lastPoint.Z), 2.0));
+                    //deltaDistance = Math.Sqrt(Math.Pow(((double)thisPoint.X - (double)lastPoint.X), 2.0)
+                    //                                    + Math.Pow(((double)thisPoint.Y - (double)lastPoint.Y), 2.0)
+                    //                                    + Math.Pow(((double)thisPoint.Z - (double)lastPoint.Z), 2.0));
+
+                    //horizotal distance is used as delta distance
+                    deltaDistance = Math.Abs(deltaP);
 
                     //velocity[k] = (distance[k]-distance[k-1])*(framerate/subsampling)
                     velocity = deltaDistance * (30 / FrameSub);

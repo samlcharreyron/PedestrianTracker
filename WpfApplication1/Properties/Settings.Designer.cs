@@ -34,13 +34,27 @@ namespace PedestrianTracker.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\trajectoryData.sdf")]
-        public string trajectoryDataConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int KinectAngle {
             get {
-                return ((string)(this["trajectoryDataConnectionString"]));
+                return ((int)(this["KinectAngle"]));
+            }
+            set {
+                this["KinectAngle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int TrajectorySubsample {
+            get {
+                return ((int)(this["TrajectorySubsample"]));
+            }
+            set {
+                this["TrajectorySubsample"] = value;
             }
         }
     }

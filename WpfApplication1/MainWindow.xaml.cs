@@ -44,6 +44,8 @@ namespace PedestrianTracker
 
         //Windows
         TrajectoryWindow tw1;
+        Options ops;
+        
 
         //Drawing
         private readonly Brush centerPointBrush = Brushes.Black;
@@ -678,6 +680,12 @@ namespace PedestrianTracker
         private void mnuViewShowPastTrajectories_Unchecked(object sender, RoutedEventArgs e)
         {
             pastTrajectories.Source = null;
+        }
+
+        private void mnuViewOptions_Clicked(object sender, RoutedEventArgs e)
+        {
+            ops = new Options();
+            ops.Show();
         }
 
     }

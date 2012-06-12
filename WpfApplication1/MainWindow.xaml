@@ -40,6 +40,9 @@
                     <MenuItem Header="Show Tracked Data" Click="mnuViewShowTrackedData_Clicked"/>
                     <MenuItem Header="Show Past Trajectories" IsCheckable="True" Checked="mnuViewShowPastTrajectories_Checked" Unchecked="mnuViewShowPastTrajectories_Unchecked"/>
                 </MenuItem>
+                <MenuItem Header="_Tools">
+                    <MenuItem Header="Options" Click="mnuViewOptions_Clicked" />
+                </MenuItem>
             </Menu>
         </DockPanel>
         <!--StackPanel Orientation="Horizontal" Grid.Row="0">
@@ -60,14 +63,19 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" Grid.Column="0">
                 <TextBlock Name="TotalPlayersLabel" Text="People in Frame: " FontSize="20" />
                 <TextBlock Name="TotalPlayersDisplay" Text="{Binding Path=TotalPlayers}" FontSize="20" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Column="2">
+            <StackPanel Orientation="Horizontal" Grid.Column="1">
                 <TextBlock Text="   Pedestrian Counts: "  FontSize="20"/>
                 <TextBlock Name="PedestrianCountsDisplay" Text="{Binding Path=PedestrianCounts}" FontSize="20" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <TextBlock Text="   Tracking Angle: "  FontSize="20"/>
+                <TextBlock Name="TrackingAngleDisplay" Text="{Binding Source={StaticResource Settings}, Path=Default.KinectAngle }" FontSize="20" />
             </StackPanel>
             <TextBlock Name="errorBox" Grid.Column="1" FontSize="20" Foreground="Red" />
         </Grid>

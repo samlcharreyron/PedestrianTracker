@@ -7,7 +7,7 @@
     //  The SettingsLoaded event is raised after the setting values are loaded.
     //  The SettingsSaving event is raised before the setting values are saved.
     internal sealed partial class Settings {
-        
+
         public Settings() {
             // // To add event handlers for saving and changing settings, uncomment the lines below:
             //
@@ -15,6 +15,12 @@
             //
             // this.SettingsSaving += this.SettingsSavingEventHandler;
             //
+        }
+
+        public string Angle
+        {
+            get{ return KinectAngle.ToString();}
+            set { KinectAngle = int.Parse(value); }
         }
         
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {
