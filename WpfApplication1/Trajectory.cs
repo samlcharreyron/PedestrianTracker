@@ -21,6 +21,13 @@ using Microsoft.Kinect;
 
 namespace PedestrianTracker
 {
+    /// <summary>
+    /// The Trajectory class is a user defined control and contains variables and methods that define and 
+    /// are applied to a moving skeleton. There are a total of 6 instances of Trajectory that are initialized 
+    /// each corresponding to a possible tracked skeleton.  The Trajectory class determines the position, velocity, direction
+    /// of the tracked skeleton, overlays this info on the RGB view, and stores it in the dataset.
+    /// </summary>
+
     public class Trajectory : UserControl
     {
         private Skeleton currentSkeleton;
@@ -29,16 +36,22 @@ namespace PedestrianTracker
         private SkeletonPoint lastPoint;
         public List<Point> pointList;
 
-        //For measuring time
-        private DateTime lastTime, currentTime;
-        private int deltaTime;
+        ////For measuring time
+        //private DateTime lastTime, currentTime;
+        //private int deltaTime;
+
+        //Frame subsampling for trajectory data MUST BE AN INTEGER MULTIPLE OF 30 (Frame Rate)
+        private const int FrameSub = 5;
+
+        //Thresholds for filtering out eroneous trajectory points
+        private const double MinDeltaDistance = 0.005;
+        private const double MaxVelocity = 3.5;
 
         //For drawing the trajectory
         private PathSegmentCollection trajectoryPathSegments;
         private PathFigure trajectoryPathFigure;
         private PathFigureCollection trajectoryPathFigureCollection;
         private PathGeometry trajectoryPathGeometry;
-
         private FormattedText trajectoryText;
         
         //Brushes
@@ -63,17 +76,6 @@ namespace PedestrianTracker
         private float deltaX = 0;
         public string Direction = "N";
 
-        //Averages
-        private double averageVelocity = 0;
-        private List<int> directionSum = new List<int>(); 
-        private string averageDirection = "N";
-
-        //For showing past trajectories
-        public bool showPastTrajectories = false;
-
-  
-        //private readonly string filepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-   
         public string Name
         {
             get;
@@ -86,10 +88,11 @@ namespace PedestrianTracker
             set;
         }
 
+        // Called when skeleton is not being tracked
         public void Reset()
         {
             this.currentSkeleton = null;
-            //this.pointList = new List<Point>();
+            this.pointList = new List<Point>();
             this.trajectoryPathSegments = null;
             this.trajectoryPathFigure = null;
             this.trajectoryPathFigureCollection = null;
@@ -101,6 +104,7 @@ namespace PedestrianTracker
             InvalidateVisual();
         }
 
+        //Adds a 2D point to the list and a segment to the current path segment
         public void AddPoint(Point point)
         {
             try
@@ -132,6 +136,7 @@ namespace PedestrianTracker
             }
         }
 
+        //Adds a segment to the trajectory figure
         private void AddSegment(Point point)
         {
             if (this.trajectoryPathSegments == null)
@@ -154,39 +159,35 @@ namespace PedestrianTracker
             }
         }
 
+        //Called to update the trajectory data
         private void IncrementDistance(SkeletonPoint thisPoint)
         {
-            //Implement subsampling of distance to every 10 frames
-
-            if (this.frameIteration == 10)
+            
+            //Implements subsampling of order FrameSub.  For example, for FrameSub = 10, 
+            //trajectory data is sampled every 10 frames so 3 times per second.
+            if (this.frameIteration == FrameSub)
             {
                 frameIteration = 0;
-
-
-                if (lastPoint != null)
+                
+                //Makes sure that there are at least 2 points so that distance differentials can be computed
+                if (lastPoint != null && (lastPoint.X != 0 && lastPoint.Y != 0 && lastPoint.Z != 0))
                 {
+                    //Assumes that people are walking on a horizontal axis.  deltaX is used to determine the walking direction.
                     deltaX = thisPoint.X - lastPoint.X;
-
                     Direction = deltaX > 0 ? "R" : "L";
 
-                    //Average Direction
-                    directionSum.Add(Direction.Equals("R") ? 1 : 0);
-
+                    //Euclidean distance between the last sampled point and the current point
                     deltaDistance = Math.Sqrt(Math.Pow(((double)thisPoint.X - (double)lastPoint.X), 2.0)
                                                         + Math.Pow(((double)thisPoint.Y - (double)lastPoint.Y), 2.0)
                                                         + Math.Pow(((double)thisPoint.Z - (double)lastPoint.Z), 2.0));
-                    velocity = deltaDistance * 3;
 
-                    if (deltaDistance > 0.005)
+                    //velocity[k] = (distance[k]-distance[k-1])*(framerate/subsampling)
+                    velocity = deltaDistance * (30 / FrameSub);
+
+                    //filters out erroneous data
+                    if (deltaDistance > MinDeltaDistance && velocity < MaxVelocity)
                     {
                         Distance += deltaDistance;
-
-                        //currentTime = DateTime.Now;
-                        //deltaTime = 1000 * currentTime.Subtract(lastTime).Seconds;
-
-                        //velocity = deltaDistance / currentTime.Subtract(lastTime).Seconds;
-
-                        //lastTime = currentTime;
 
                         //load data first
                         if (Globals.ds == null)
@@ -194,12 +195,14 @@ namespace PedestrianTracker
                             Globals.ds = new TrajectoryDbDataSet();
                         }
 
+                        //Adds a point to the Point dataset
                         addPointData(thisPoint, Distance, deltaDistance, velocity, Direction, t_key);
 
                     }
 
                 }
 
+                //stores the point for the next calculation
                 lastPoint = thisPoint;
             }
 
@@ -260,8 +263,7 @@ namespace PedestrianTracker
             this.InvalidateVisual();
         }
 
-        //Private saving data
-
+       
         public void loadPointData()
         {
             using (connection = new SqlConnection(MainWindow.connectionString))
@@ -347,6 +349,7 @@ namespace PedestrianTracker
             }
         }
 
+        //Called everytime the Trajectory instance is rendered (once per frame). Will draw the trajectory, trajectory info box, skeleton center point
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
@@ -365,8 +368,8 @@ namespace PedestrianTracker
                     //TrajectoryTextBrush.Opacity = .5;
 
                     trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity: " + this.velocity.ToString("#.##" + " m/s")  + "\nDirection: " + this.Direction
-                        + "\nDistance: " + this.Distance
-                        + "\nX: " + currentSkeleton.Position.X + "  Y: " + currentSkeleton.Position.Y + "   Z: " + currentSkeleton.Position.Z,
+                        + "\nDistance: " + this.Distance,
+                        // "\nX: " + currentSkeleton.Position.X + "  Y: " + currentSkeleton.Position.Y + "   Z: " + currentSkeleton.Position.Z,
                                                 CultureInfo.GetCultureInfo("en-us"),
                                                 FlowDirection.LeftToRight,
                                                 new Typeface("Verdana"),
