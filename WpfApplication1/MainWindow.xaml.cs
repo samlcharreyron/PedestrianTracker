@@ -15,7 +15,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Media.Media3D;
+//using _3DTools;
+using Petzold.Media3D;
 using Microsoft.Kinect;
+using PedestrianTracker.Properties;
+
 
 //For testing
 using System.Diagnostics;
@@ -46,10 +51,18 @@ namespace PedestrianTracker
         TrajectoryWindow tw1;
         Options ops;
         
+        //Floor clipping plane
+        Double A, B, C, D;
+        private const int planeDepth = 60;
+        private const int planeWidth = 60;
 
         //Drawing
         private readonly Brush centerPointBrush = Brushes.Black;
         private const double BodyCenterThickness = 8;
+
+        private WireLines line;
+        private ModelVisual3D planeModel;
+        private Axes axes;
 
         Skeleton[] skeletons = new Skeleton[numberOfSkeletons];
 
@@ -277,7 +290,12 @@ namespace PedestrianTracker
                     errorMessage += "Unable to copy over skeleton data";
                 }
 
-                
+                //Retrieve floor clipping plane parameters
+                this.A = skeletonFrame.FloorClipPlane.Item1;
+                this.B = skeletonFrame.FloorClipPlane.Item2;
+                this.C = skeletonFrame.FloorClipPlane.Item3;
+                this.D = skeletonFrame.FloorClipPlane.Item4;
+
                 //Make sure counter starts from 0 every frame
                 TotalPlayers = 0;
 
@@ -495,7 +513,35 @@ namespace PedestrianTracker
             return result;
         }
 
+        private void drawRoadAxis()
+        {
+            Point firstPoint;
 
+            try
+            {
+                firstPoint = SkeletonPointToPoint(-0.5f, 0.0f, 1f);
+            }
+
+            catch (Exception e)
+            {
+                return;
+            }
+
+            Point secondPoint = SkeletonPointToPoint(1, 0, 1);
+
+            Line line = new Line();
+            line.X1 = firstPoint.X;
+            line.Y1 = firstPoint.Y;
+            line.X2 = secondPoint.X;
+            line.Y2 = secondPoint.Y;
+            line.Stroke = Brushes.Red;
+            line.StrokeThickness = 4;
+
+            C1.Children.Add(line);
+
+            //drawingContext.DrawLine(new Pen(Brushes.Black,2),firstPoint, secondPoint);
+
+        }
         /*
          * Menu Event Handlers
          * 
@@ -686,6 +732,134 @@ namespace PedestrianTracker
         {
             ops = new Options();
             ops.Show();
+        }
+
+        private void mnuViewShowRoadAxis_Unchecked(object sender, RoutedEventArgs e)
+        {
+            //RoadAxis.Visibility = Visibility.Hidden;
+            if (line != null)
+            {
+                if (model.Children.Contains(line))
+                {
+                    model.Children.Remove(line);
+                    line = null;
+                }
+
+                if (viewport.Children.Contains(planeModel))
+                {
+                    viewport.Children.Remove(planeModel);
+                    planeModel = null;
+                }
+
+                if (model.Children.Contains(axes))
+                {
+                    model.Children.Remove(axes);
+                    axes = null;
+                }
+            }
+        }
+
+        private void mnuViewShowRoadAxis_Checked(object sender, RoutedEventArgs e)
+        {
+            axes = new Axes()
+            {
+                ArrowEnds = Petzold.Media2D.ArrowEnds.End,
+                Color = Colors.White,
+                Thickness = 3,
+            };
+
+            model.Children.Add(axes);
+
+            DrawClippingPlane();
+            DrawRoadAxis();
+
+        }
+
+        private void mnuViewShow3DTrajectory_Clicked(object sender, RoutedEventArgs e)
+        {
+            Trajectory3DView traj3d = new Trajectory3DView();
+            traj3d.Show();
+        }
+
+        private Model3DGroup CreateTriangleModel(Point3D p0, Point3D p1, Point3D p2)
+        {
+            MeshGeometry3D mesh = new MeshGeometry3D();
+            mesh.Positions.Add(p0);
+            mesh.Positions.Add(p1);
+            mesh.Positions.Add(p2);
+            mesh.TriangleIndices.Add(0);
+            mesh.TriangleIndices.Add(1);
+            mesh.TriangleIndices.Add(2);
+            Vector3D normal = CalculateNormal(p0, p1, p2);
+            mesh.Normals.Add(normal);
+            mesh.Normals.Add(normal);
+            mesh.Normals.Add(normal);
+            Material material = new DiffuseMaterial(
+                new SolidColorBrush(Colors.Red)
+                {
+                    Opacity = 0.3
+                });
+            GeometryModel3D model = new GeometryModel3D(
+                mesh, material);
+            Model3DGroup group = new Model3DGroup();
+            group.Children.Add(model);
+            return group;
+        }
+        private Vector3D CalculateNormal(Point3D p0, Point3D p1, Point3D p2)
+        {
+            Vector3D v0 = new Vector3D(
+                p1.X - p0.X, p1.Y - p0.Y, p1.Z - p0.Z);
+            Vector3D v1 = new Vector3D(
+                p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
+            return Vector3D.CrossProduct(v1, v0);
+        }
+
+        private double FindYPoint(double X, double Z)
+        {
+            try
+            {
+                return (-D - A * X - C * Z) / B;
+            }
+            catch (Exception e)
+            {
+                return 0.0;
+            }
+        }
+
+        private void DrawClippingPlane()
+        {
+            Model3DGroup plane = new Model3DGroup();
+
+            Point3D p0 = new Point3D(-planeWidth, FindYPoint(-planeWidth, -planeDepth), -planeDepth);
+            Point3D p1 = new Point3D(planeWidth, FindYPoint(planeWidth, -planeDepth), -planeDepth);
+            Point3D p2 = new Point3D(-planeWidth, FindYPoint(-planeWidth, 0), 0);
+            Point3D p3 = new Point3D(planeWidth, FindYPoint(planeWidth, 0), 0);
+
+            plane.Children.Add(CreateTriangleModel(p0, p1, p3));
+            plane.Children.Add(CreateTriangleModel(p1, p2, p3));
+
+            planeModel = new ModelVisual3D();
+            planeModel.Content = plane;
+            viewport.Children.Add(planeModel);
+        }
+
+        private void DrawRoadAxis()
+        {
+            Point3DCollection points = new Point3DCollection();
+
+            points.Add(new Point3D(-planeWidth, FindYPoint(-planeWidth, -5), -5));
+            points.Add(new Point3D(planeWidth, FindYPoint(planeWidth, -5), -5));
+
+            line = new WireLines()
+            {
+                Lines = points,
+                Color = Colors.Black,
+                Thickness = 4.0,
+            };
+
+            line.Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), Settings.Default.KinectAngle));
+
+            model.Children.Add(line);
         }
 
     }

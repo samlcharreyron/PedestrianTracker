@@ -12,6 +12,8 @@
         Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" >
     <Window.Resources>
         <l:VisibilityConverter x:Key="VisibilityConverter" />
+        <l:RoadAxisY1PaddingConverter x:Key="RoadAxisY1PaddingConverter" />
+        <l:RoadAxisY2PaddingConverter x:Key="RoadAxisY2PaddingConverter" />
     </Window.Resources>
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
@@ -39,6 +41,8 @@
                 <MenuItem Header="_View">
                     <MenuItem Header="Show Tracked Data" Click="mnuViewShowTrackedData_Clicked"/>
                     <MenuItem Header="Show Past Trajectories" IsCheckable="True" Checked="mnuViewShowPastTrajectories_Checked" Unchecked="mnuViewShowPastTrajectories_Unchecked"/>
+                    <MenuItem Header="Show Road Axis" IsCheckable="True" Checked="mnuViewShowRoadAxis_Checked" Unchecked="mnuViewShowRoadAxis_Unchecked" />
+                    <MenuItem Header="Show 3D Trajectory View" Click="mnuViewShow3DTrajectory_Clicked" />
                 </MenuItem>
                 <MenuItem Header="_Tools">
                     <MenuItem Header="Options" Click="mnuViewOptions_Clicked" />
@@ -49,8 +53,51 @@
             <TextBlock Text="Save trajectories to file    " Padding="10" VerticalAlignment="Center" />
             <Button Content="Export" Height="23" HorizontalAlignment="Left" Name="button1" Width="75" />
         </StackPanel -->
-        <Canvas Grid.Row="1">
-            <Image Name="image1" Height="480" Width="640"/>
+        <Canvas x:Name="C1" Grid.Row="1">
+            <Image Name="image1" Height="{Binding Path= RenderHeight}" Width="{Binding Path= RenderHeight}"/>
+            <Viewport3D Name="viewport" Height="{Binding ElementName=image1, Path=ActualHeight}" Width="{Binding ElementName=image1,Path=ActualWidth}">
+                <Viewport3D.Camera>
+                    <PerspectiveCamera x:Name="camera"
+                        LookDirection="0,0,-1" UpDirection="0,1,0"
+                        Position="0,0,0" FieldOfView="45" />
+                </Viewport3D.Camera>
+                <ModelVisual3D x:Name="model">
+                    <ModelVisual3D.Content>
+                        <Model3DGroup x:Name="group">
+                            <AmbientLight Color="DarkGray" />
+                            <DirectionalLight Color="White" Direction="-5,-5,-7" />
+                        </Model3DGroup>
+                    </ModelVisual3D.Content>
+                </ModelVisual3D>
+            </Viewport3D>
+            <Line x:Name="RoadAxis" ClipToBounds="True" Height="480" Width="640" Visibility="Hidden">
+                <Line.X1>-80</Line.X1>
+                <Line.X2>700</Line.X2>
+                <Line.Y1>240</Line.Y1>
+                <Line.Y2>240</Line.Y2>
+                <Line.Stroke>Black</Line.Stroke>
+                <Line.StrokeThickness>4</Line.StrokeThickness>
+                <Line.RenderTransform>
+                    <RotateTransform CenterX="320" CenterY="240" Angle="{Binding Source={StaticResource Settings}, Path=Default.KinectAngle}" />
+                </Line.RenderTransform>
+            </Line>
+
+            <!--Line x:Name="RoadAxis" Stroke="Black" StrokeThickness="4">
+                <Line.X1>0</Line.X1>
+                <Line.X2>
+                    <Binding ElementName="image1" Path="ActualWidth"/> 
+                </Line.X2>
+                <Line.Y1>
+                    <Binding Converter="{StaticResource RoadAxisY1PaddingConverter}" ConverterParameter="20" ElementName="image1" Path="ActualHeight"/>
+                </Line.Y1>
+                <Line.Y2>
+                    <MultiBinding Converter="{StaticResource RoadAxisY2PaddingConverter}" ConverterParameter="20">
+                        <Binding ElementName="image1" Path="ActualHeight" />
+                        <Binding ElementName="image1" Path="ActualWidth" />
+                        <Binding Source="{StaticResource Settings}" Path="Default.KinectAngle" />
+                    </MultiBinding>
+                </Line.Y2>
+            </Line -->            
             <l:Trajectory x:Name="trajectoryCanvas1" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
             <l:Trajectory x:Name="trajectoryCanvas2" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
             <l:Trajectory x:Name="trajectoryCanvas3" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />

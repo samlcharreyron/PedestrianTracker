@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Petzold.Media3D.BezierSegment3D" Collapsed="true">
+    <Position X="5.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAEAAAAgAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Paths\BezierSegment3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.LineSegment3D" Collapsed="true">
+    <Position X="5.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAEAAAAAAAAAAAAAAAAAAAAAAAAADA=</HashCode>
+      <FileName>Paths\LineSegment3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.PathFigure3D" Collapsed="true">
+    <Position X="1" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIECQAAQAABAAAAEAAAAAAAAACAAAAAAAQAACAAAACg=</HashCode>
+      <FileName>Paths\PathFigure3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.PathFigure3DCollection">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Paths\PathFigure3DCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.PathGeometry3D">
+    <Position X="3.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAQAAAAAABAAAAAEAAAAAAQAAAAAAAAAAAAgAAAAACA=</HashCode>
+      <FileName>Paths\PathGeometry3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.PathSegment3D" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAABAAAAAAAAAEAQAAAAA=</HashCode>
+      <FileName>Paths\PathSegment3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.PathSegment3DCollection">
+    <Position X="3.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Paths\PathSegment3DCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.PolyBezierSegment3D" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAEAAAAgAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Paths\PolyBezierSegment3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.PolyLineSegment3D" Collapsed="true">
+    <Position X="9.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAEAAAAgAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Paths\PolyLineSegment3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

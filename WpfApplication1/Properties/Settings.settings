@@ -16,5 +16,14 @@
     <Setting Name="TrajectorySubsample" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="VerticalAngle" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="RenderHeight" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">480</Value>
+    </Setting>
+    <Setting Name="RenderWidth" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">640</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

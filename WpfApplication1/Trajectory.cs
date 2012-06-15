@@ -47,11 +47,18 @@ namespace PedestrianTracker
         //Thresholds for filtering out eroneous trajectory points
         private const double MinDeltaDistance = 0.005;
         private const double MaxVelocity = 3.5;
+        private const double DeltaYThreshold = 0.022;
+        private const double DeltaZThreshold = 0.022;
+        private const double VelocityLowThreshold = 0.3;
+        private const double VelocityHighThreshold = 0.3;
+
 
         //The angle in degrees between the road and the kinect heading (0 if tracking horizontally), 90 if tracking head on)
         private int TrackingAngle = 0;
         private float AngleProjectionFactorX = 1;
         private float AngleProjectionFactorZ = 0;
+        private float deltaY = 0;
+        private float deltaZ = 0;
 
         //For drawing the trajectory
         private PathSegmentCollection trajectoryPathSegments;
@@ -176,6 +183,11 @@ namespace PedestrianTracker
             return (X * AngleProjectionFactorX + Z * AngleProjectionFactorZ);
         }
 
+        private float[] VectorRotation(float X, float Z)
+        {
+            return new float[] {X * AngleProjectionFactorX , Z * AngleProjectionFactorZ};
+        }
+
         //Called to update the trajectory data
         private void IncrementDistance(SkeletonPoint thisPoint)
         {
@@ -189,7 +201,9 @@ namespace PedestrianTracker
                 //Makes sure that there are at least 2 points so that distance differentials can be computed
                 if (lastPoint != null && (lastPoint.X != 0 && lastPoint.Y != 0 && lastPoint.Z != 0))
                 {
-                    //Assumes that people are walking on a horizontal axis.  deltaX is used to determine the walking direction.
+                    deltaY = Math.Abs(thisPoint.Y - lastPoint.Y);
+                    deltaZ = Math.Abs(thisPoint.Z - lastPoint.Z);
+                    
                     deltaP = VectorToDistance(thisPoint.X-lastPoint.X,thisPoint.Z-lastPoint.Z);
 
                     Direction = deltaP > 0 ? "R" : "L";
@@ -284,7 +298,21 @@ namespace PedestrianTracker
             this.InvalidateVisual();
         }
 
-       
+        public static double StandardDeviation(List<double> valueList)
+        {
+            double M = 0.0;
+            double S = 0.0;
+            int k = 1;
+            foreach (double value in valueList)
+            {
+                double tmpM = M;
+                M += (value - tmpM) / k;
+                S += (value - tmpM) * (value - M);
+                k++;
+            }
+            return Math.Sqrt(S / (k - 1));
+        }
+
         public void loadPointData()
         {
             using (connection = new SqlConnection(MainWindow.connectionString))
@@ -349,16 +377,31 @@ namespace PedestrianTracker
                 double velocitySum = 0;
                 int directionSum = 0;
                 int rows = 0;
+                List<double> velocities = new List<double>();
 
                 foreach (DataRow row in Globals.ds.points.Select(String.Format("t_id = {0}", t_id)))
                 {
-                    velocitySum += (double)row[5];
+                    velocities.Add((double)row[5]);
+                    //velocitySum += (double)row[5];
                     directionSum += Direction.Equals("R") ? 1 : 0;
                     
                     rows++;
                 }
 
-                currentRow.average_velocity = velocitySum/rows;
+                double mean = velocities.Average();
+                double stdev = StandardDeviation(velocities);
+                int n = 0;
+
+                foreach (double v in velocities)
+                {
+                    if (v > (mean - 2* stdev) && v < (mean + 2*stdev))
+                    {
+                        velocitySum += v;
+                        n++;
+                    }
+                }
+
+                currentRow.average_velocity = velocitySum/n;
                 currentRow.average_direction = (directionSum/rows > 0.5) ? "R" : "L";
                 currentRow.length = this.Distance;
 
@@ -389,8 +432,9 @@ namespace PedestrianTracker
                     //TrajectoryTextBrush.Opacity = .5;
 
                     trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity: " + this.velocity.ToString("#.##" + " m/s")  + "\nDirection: " + this.Direction
-                        + "\nDistance: " + this.Distance,
-                        // "\nX: " + currentSkeleton.Position.X + "  Y: " + currentSkeleton.Position.Y + "   Z: " + currentSkeleton.Position.Z,
+                        + "\nDistance: " + this.Distance
+                        +"\ndY: " + deltaY + "  dZ: " + deltaZ,
+                        //+ "\nX: " + currentSkeleton.Position.X + "  Y: " + currentSkeleton.Position.Y + "   Z: " + currentSkeleton.Position.Z,
                                                 CultureInfo.GetCultureInfo("en-us"),
                                                 FlowDirection.LeftToRight,
                                                 new Typeface("Verdana"),
@@ -414,7 +458,7 @@ namespace PedestrianTracker
             }
             
             //To draw trajectory only if there is something to draw and if the skeleton is tracked
-            if (trajectoryPathGeometry != null && currentSkeleton != null & currentSkeleton.TrackingState!=SkeletonTrackingState.NotTracked)
+            if (trajectoryPathGeometry != null && currentSkeleton != null && currentSkeleton.TrackingState!=SkeletonTrackingState.NotTracked)
             {
                 drawingContext.DrawGeometry(null, new Pen(this.TrajectoryBrush,2), this.trajectoryPathGeometry);
             }

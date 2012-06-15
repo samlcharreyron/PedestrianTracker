@@ -35,6 +35,25 @@ namespace PedestrianTracker
         {
             mySettings.Save();
         }
+
+        public static bool TrySetAngle(int angle)
+        {
+            try
+            {
+                MainWindow.myKinect.ElevationAngle = angle;
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        private void ElevationAngleChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            TrySetAngle((int)e.NewValue);
+        }
+
         
     }
 }

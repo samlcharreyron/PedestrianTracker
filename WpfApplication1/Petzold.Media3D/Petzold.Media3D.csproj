@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BEBED159-4DB6-4550-8342-7F3607177B71}</ProjectGuid>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <RootNamespace>Petzold.Media3D</RootNamespace>
+    <AssemblyName>Petzold.Media3D</AssemblyName>
+    <WarningLevel>4</WarningLevel>
+    <OutputType>Library</OutputType>
+    <!-- Most people will use Publish dialog in Visual Studio to increment this -->
+    <StartupObject>
+    </StartupObject>
+    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Meshes\CylindricalMeshBase.cs" />
+    <Compile Include="Meshes\TubeMesh.cs" />
+    <Compile Include="Visuals\Algorithmic Transforms\AlgorithmicTransform.cs" />
+    <Compile Include="Visuals\Algorithmic Transforms\AlgorithmicTransformCollection.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Meshes\CylinderMesh.cs" />
+    <Compile Include="Meshes\Polyhedra\CubeMesh.cs" />
+    <Compile Include="Meshes\Polyhedra\OctahedronMesh.cs" />
+    <Compile Include="Meshes\Polyhedra\TetrahedronMesh.cs" />
+    <Compile Include="Miscellaneous\Matrix3DPanel.cs" />
+    <Compile Include="Media2D\ArrowEnds.cs" />
+    <Compile Include="Media2D\ArrowLine.cs" />
+    <Compile Include="Media2D\ArrowLineBase.cs" />
+    <Compile Include="Media2D\ArrowPolyline.cs" />
+    <Compile Include="Meshes\BoxMesh.cs" />
+    <Compile Include="Meshes\Polyhedra\DodecahedronMesh.cs" />
+    <Compile Include="Meshes\FlatSurfaceMeshBase.cs" />
+    <Compile Include="Meshes\HollowCylinderMesh.cs" />
+    <Compile Include="Meshes\Polyhedra\IcosahedronMesh.cs" />
+    <Compile Include="Meshes\MeshGeneratorBase.cs" />
+    <Compile Include="Meshes\Polyhedra\PolyhedronMeshBase.cs" />
+    <Compile Include="Meshes\SphereMesh.cs" />
+    <Compile Include="Meshes\TeapotTriangleRange.cs" />
+    <Compile Include="Meshes\TeapotTriangleRangeConverter.cs" />
+    <Compile Include="Meshes\TorusMesh.cs" />
+    <Compile Include="Paths\BezierSegment3D.cs" />
+    <Compile Include="Paths\PolyBezierSegment3D.cs" />
+    <Compile Include="Paths\PolyLineSegment3D.cs" />
+    <Compile Include="Transforms\LineRange.cs" />
+    <Compile Include="Transforms\ViewportInfo.cs" />
+    <Compile Include="Transforms\VisualInfo.cs" />
+    <Compile Include="Visuals\ModelVisual.cs" />
+    <Compile Include="Visuals\ModelVisualBase.cs" />
+    <Compile Include="Wires\Axes.cs" />
+    <Compile Include="Transforms\CameraInfo.cs" />
+    <Compile Include="Wires\Font.cs" />
+    <Compile Include="Wires\WireBaseAndUltimateParent.cs" />
+    <Compile Include="Wires\WireFrame.cs" />
+    <Compile Include="Wires\WireLine.cs" />
+    <Compile Include="Wires\WireBase.cs" />
+    <Compile Include="Wires\WireLines.cs" />
+    <Compile Include="Wires\WirePath.cs" />
+    <Compile Include="Wires\WirePolyline.cs" />
+    <Compile Include="Wires\StrokeCharacter.cs" />
+    <Compile Include="Wires\WireText.cs" />
+    <Compile Include="Wires\TextGenerator.cs" />
+    <Compile Include="Paths\LineSegment3D.cs" />
+    <Compile Include="Paths\PathFigure3D.cs" />
+    <Compile Include="Paths\PathFigure3DCollection.cs" />
+    <Compile Include="Paths\PathGeometry3D.cs" />
+    <Compile Include="Paths\PathSegment3D.cs" />
+    <Compile Include="Paths\PathSegment3DCollection.cs" />
+    <Compile Include="Visuals\Billboard.cs" />
+    <Compile Include="Visuals\Cuboid.cs" />
+    <Compile Include="Visuals\Cylinder.cs" />
+    <Compile Include="Meshes\PolygonMesh.cs" />
+    <Compile Include="Visuals\Sphere.cs" />
+    <Compile Include="Meshes\TeapotMesh.cs" />
+    <Compile Include="Visuals\Algorithmic Transforms\Twister.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Meshes\Meshes.cd" />
+    <None Include="Paths\Paths.cd" />
+    <None Include="Wires\Wires.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Petzold.Media3D.FlatSurfaceMeshBase" Collapsed="true">
+    <Position X="4.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAQAAAAAgAACACAAAAAAAAAQAEAAAAAAAAAACEAQE=</HashCode>
+      <FileName>Meshes\FlatSurfaceMeshBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.PolygonMesh" Collapsed="true">
+    <Position X="9.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAIAAAQAAAAAAABAAIAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Meshes\PolygonMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.PolyhedronMeshBase" Collapsed="true">
+    <Position X="7.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAIAAAAAAAAAAAIAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Meshes\Polyhedra\PolyhedronMeshBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.DodecahedronMesh" Collapsed="true">
+    <Position X="11" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKEEAACA=</HashCode>
+      <FileName>Meshes\Polyhedra\DodecahedronMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.IcosahedronMesh" Collapsed="true">
+    <Position X="4" Y="3.75" Width="1.5" />
+    <InheritanceLine Type="Petzold.Media3D.PolyhedronMeshBase" FixedFromPoint="true">
+      <Path>
+        <Point X="8.25" Y="2.88" />
+        <Point X="8.25" Y="3.375" />
+        <Point X="4.75" Y="3.375" />
+        <Point X="4.75" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>gAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAACA=</HashCode>
+      <FileName>Meshes\Polyhedra\IcosahedronMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.CubeMesh" Collapsed="true">
+    <Position X="7.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Meshes\Polyhedra\CubeMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.OctahedronMesh" Collapsed="true">
+    <Position X="9.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Meshes\Polyhedra\OctahedronMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.TetrahedronMesh" Collapsed="true">
+    <Position X="5.75" Y="3.75" Width="1.5" />
+    <InheritanceLine Type="Petzold.Media3D.PolyhedronMeshBase" FixedFromPoint="true">
+      <Path>
+        <Point X="8.25" Y="2.88" />
+        <Point X="8.25" Y="3.375" />
+        <Point X="6.5" Y="3.375" />
+        <Point X="6.5" Y="3.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>gAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Meshes\Polyhedra\TetrahedronMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.BoxMesh" Collapsed="true">
+    <Position X="4" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACBAABAIAACAAAAAAAFAAgYAAAAAkAAAAAACAACg=</HashCode>
+      <FileName>Meshes\BoxMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.CylinderMesh" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAQAQBAAAAAAAIAAAAAAAAAAQgAAACA=</HashCode>
+      <FileName>Meshes\CylinderMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.CylindricalMeshBase" Collapsed="true">
+    <Position X="2.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIABAAAAAAACAAAAAAEABAgAAEAAAAAAAACACAAAg=</HashCode>
+      <FileName>Meshes\CylindricalMeshBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.HollowCylinderMesh" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Meshes\HollowCylinderMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.MeshGeneratorBase" Collapsed="true">
+    <Position X="1" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAAQAgIAAgAAAAAAAAQAAgAA=</HashCode>
+      <FileName>Meshes\MeshGeneratorBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.SphereMesh" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAACAgAAAAEAAAgIAEAAAAAAAACACIACg=</HashCode>
+      <FileName>Meshes\SphereMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.TorusMesh" Collapsed="true">
+    <Position X="5.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAACAAAAAAEAAAgIDEAAAAAAAACACAACg=</HashCode>
+      <FileName>Meshes\TorusMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.TubeMesh" Collapsed="true">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQABAAQAQBAAAAAAAIAAIEAAAAAAQgAAACA=</HashCode>
+      <FileName>Meshes\TubeMesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

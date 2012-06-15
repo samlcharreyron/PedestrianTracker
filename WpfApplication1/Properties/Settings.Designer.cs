@@ -57,5 +57,41 @@ namespace PedestrianTracker.Properties {
                 this["TrajectorySubsample"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int VerticalAngle {
+            get {
+                return ((int)(this["VerticalAngle"]));
+            }
+            set {
+                this["VerticalAngle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("480")]
+        public float RenderHeight {
+            get {
+                return ((float)(this["RenderHeight"]));
+            }
+            set {
+                this["RenderHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("640")]
+        public float RenderWidth {
+            get {
+                return ((float)(this["RenderWidth"]));
+            }
+            set {
+                this["RenderWidth"] = value;
+            }
+        }
     }
 }

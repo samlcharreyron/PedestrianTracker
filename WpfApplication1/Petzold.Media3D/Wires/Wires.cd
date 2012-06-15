@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Petzold.Media3D.Axes">
+    <Position X="3.75" Y="7.25" Width="1.75" />
+    <Members>
+      <Method Name="ValidateLabels" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EEEAAAEAUAIAgAAAAAAQAwAEAAgAAAABgAAAAEACAkA=</HashCode>
+      <FileName>Wires\Axes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.StrokeCharacter" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAQEAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Wires\StrokeCharacter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.TextGenerator" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgQAABAAAAwIAAEgAEAAEAAABAAAAAAEgCEAA=</HashCode>
+      <FileName>Wires\TextGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.WireBaseAndUltimateParent" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Wires\WireBaseAndUltimateParent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.WireBase">
+    <Position X="5.75" Y="2.25" Width="2.25" />
+    <Members>
+      <Method Name="AddRounding" Hidden="true" />
+      <Method Name="CalculatePoint" Hidden="true" />
+      <Method Name="ColorPropertyChanged" Hidden="true" />
+      <Method Name="DoArrow" Hidden="true" />
+      <Method Name="DoLine" Hidden="true" />
+      <Field Name="LineCollectionKey" Hidden="true" />
+      <Field Name="listRemove" Hidden="true" />
+      <Field Name="listWireBases" Hidden="true" />
+      <Field Name="matxScreenToVisual" Hidden="true" />
+      <Field Name="matxVisualToScreen" Hidden="true" />
+      <Field Name="needRecalculation" Hidden="true" />
+      <Method Name="OnRendering" Hidden="true" />
+      <Method Name="RecalcPropertyChanged" Hidden="true" />
+      <Method Name="Recalculate" Hidden="true" />
+      <Field Name="rotate" Hidden="true" />
+      <Method Name="Widen" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>HA4AAAAgABCBAAAACAAQEAAAwYAJAEFIAhAAkEADoAA=</HashCode>
+      <FileName>Wires\WireBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.WireLine">
+    <Position X="6.25" Y="7.25" Width="1.5" />
+    <InheritanceLine Type="Petzold.Media3D.WireBase" FixedToPoint="true">
+      <Path>
+        <Point X="6.875" Y="6.416" />
+        <Point X="6.875" Y="7.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAgAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Wires\WireLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Petzold.Media3D.WireText">
+    <Position X="8.25" Y="7.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AFEAAAEgAAAAAAAAwAAAAiAEAAAAAIBAEAAACEgCAIA=</HashCode>
+      <FileName>Wires\WireText.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Windows.Media.Media3D.ModelVisual3D" Collapsed="true">
+    <Position X="3" Y="4" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Enum Name="Petzold.Media3D.Font" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Wires\Font.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
