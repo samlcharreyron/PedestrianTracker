@@ -70,17 +70,6 @@
                     </ModelVisual3D.Content>
                 </ModelVisual3D>
             </Viewport3D>
-            <Line x:Name="RoadAxis" ClipToBounds="True" Height="480" Width="640" Visibility="Hidden">
-                <Line.X1>-80</Line.X1>
-                <Line.X2>700</Line.X2>
-                <Line.Y1>240</Line.Y1>
-                <Line.Y2>240</Line.Y2>
-                <Line.Stroke>Black</Line.Stroke>
-                <Line.StrokeThickness>4</Line.StrokeThickness>
-                <Line.RenderTransform>
-                    <RotateTransform CenterX="320" CenterY="240" Angle="{Binding Source={StaticResource Settings}, Path=Default.KinectAngle}" />
-                </Line.RenderTransform>
-            </Line>
 
             <!--Line x:Name="RoadAxis" Stroke="Black" StrokeThickness="4">
                 <Line.X1>0</Line.X1>

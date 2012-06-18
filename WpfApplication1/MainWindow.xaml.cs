@@ -50,7 +50,7 @@ namespace PedestrianTracker
         //Windows
         TrajectoryWindow tw1;
         Options ops;
-        
+
         //Floor clipping plane
         Double A, B, C, D;
         private const int planeDepth = 60;
@@ -78,11 +78,11 @@ namespace PedestrianTracker
 
         //Dataset stuff
         private DataRow lastDataRow;
-        
+
         //Dependency Properties
         public static readonly DependencyProperty TotalPlayersProperty =
                 DependencyProperty.Register("TotalPlayers", typeof(int), typeof(MainWindow), new UIPropertyMetadata(0));
-        
+
         public static readonly DependencyProperty PedestrianCountsProperty =
                 DependencyProperty.Register("PedestrianCounts", typeof(int), typeof(MainWindow), new UIPropertyMetadata(0));
 
@@ -137,7 +137,7 @@ namespace PedestrianTracker
             //SkeletonImage.Source = this.imageSource;
 
             loadKinect();
-       
+
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -204,7 +204,7 @@ namespace PedestrianTracker
             }
 
             //Add event handler for streams
-            myKinect.AllFramesReady +=new EventHandler<AllFramesReadyEventArgs>(myKinect_AllFramesReady);
+            myKinect.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(myKinect_AllFramesReady);
 
             try
             {
@@ -260,7 +260,7 @@ namespace PedestrianTracker
                     BitmapSource.Create(colorFrame.Width, colorFrame.Height,
                     96, 96, PixelFormats.Bgr32, null, pixels, stride);
             }
-               
+
 
 
             using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
@@ -322,7 +322,7 @@ namespace PedestrianTracker
                             //    trajectoryCanvas.Reset();
                             //    continue;
                             //}
-                            
+
                             //set tracking state to Position Only and increment player count
                             s.TrackingState = SkeletonTrackingState.PositionOnly;
                             TotalPlayers++;
@@ -446,13 +446,13 @@ namespace PedestrianTracker
         private Point SkeletonPointToPoint(float X, float Y, float Z)
         {
             SkeletonPoint skelPoint = new SkeletonPoint();
-                        skelPoint.X = X;
-                        skelPoint.Y = Y;
-                        skelPoint.Z = Z;
+            skelPoint.X = X;
+            skelPoint.Y = Y;
+            skelPoint.Z = Z;
 
             ColorImagePoint imgPoint = myKinect.MapSkeletonPointToColor(skelPoint, ColorImageFormat.RgbResolution640x480Fps30);
 
-            return new Point(imgPoint.X ,imgPoint.Y);
+            return new Point(imgPoint.X, imgPoint.Y);
         }
 
         private void DrawCenterPoint(Skeleton s, DrawingContext dc)
@@ -501,9 +501,9 @@ namespace PedestrianTracker
 
                         if (Globals.ds != null)
                         {
-                            
-                            result [1] = pointsDa.Update(Globals.ds);
-                            
+
+                            result[1] = pointsDa.Update(Globals.ds);
+
                         }
                     }
 
@@ -581,7 +581,7 @@ namespace PedestrianTracker
                                 row = line.Split(',');
                                 Globals.ds.trajectories.Rows.Add(row);
                             }
-                            
+
                             i++;
                         }
                     }
@@ -590,7 +590,7 @@ namespace PedestrianTracker
                         MessageBox.Show(ex.ToString());
                     }
                 }
-               }
+            }
         }
 
         private void mnuFileSaveAs_Click(object sender, RoutedEventArgs e)
@@ -720,7 +720,7 @@ namespace PedestrianTracker
             //    drawingContext.DrawRectangle(Brushes.Red, null, new Rect(0, 0, RenderWidth, RenderHeight));
             //    drawingContext.DrawGeometry(null, new Pen(Brushes.Red, 2), geometry);
             //}
-            
+
         }
 
         private void mnuViewShowPastTrajectories_Unchecked(object sender, RoutedEventArgs e)
@@ -847,8 +847,8 @@ namespace PedestrianTracker
         {
             Point3DCollection points = new Point3DCollection();
 
-            points.Add(new Point3D(-planeWidth, FindYPoint(-planeWidth, -5), -5));
-            points.Add(new Point3D(planeWidth, FindYPoint(planeWidth, -5), -5));
+            points.Add(new Point3D(-planeWidth, FindYPoint(-planeWidth, -10), -10));
+            points.Add(new Point3D(planeWidth, FindYPoint(planeWidth, -10), -10));
 
             line = new WireLines()
             {
@@ -857,8 +857,13 @@ namespace PedestrianTracker
                 Thickness = 4.0,
             };
 
-            line.Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), Settings.Default.KinectAngle));
-
+            line.Transform = new RotateTransform3D()
+            {Rotation = new AxisAngleRotation3D(new Vector3D(0,1,0),Settings.Default.KinectAngle),
+                CenterX = 0,
+                CenterY = 0,
+                CenterZ = -10
+            };
+                
             model.Children.Add(line);
         }
 

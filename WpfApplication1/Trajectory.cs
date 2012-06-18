@@ -82,6 +82,7 @@ namespace PedestrianTracker
         private SqlCommandBuilder cmdBuilder;
         private TrajectoryDbDataSet.trajectoriesRow t_key;
         private int t_id;
+        private DateTime startTime;
 
         private int frameIteration = 0;
         private double deltaDistance = 0;
@@ -89,11 +90,6 @@ namespace PedestrianTracker
         private float deltaP = 0;
         public string Direction = "N";
 
-        public string Name
-        {
-            get;
-            set;
-        }
 
         public double Distance
         {
@@ -333,7 +329,8 @@ namespace PedestrianTracker
         {
             try
             {
-                Globals.ds.points.AddpointsRow(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction, (byte) trackedSkeleton, t_key);
+                byte milliseconds = (byte) DateTime.Now.Subtract(startTime).TotalMilliseconds;
+                Globals.ds.points.AddpointsRow(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction, (byte) trackedSkeleton, t_key,milliseconds);
             }
             catch
             {
@@ -352,7 +349,8 @@ namespace PedestrianTracker
 
             try
             {
-                this.t_key = Globals.ds.trajectories.AddtrajectoriesRow((byte)trackedSkeleton, DateTime.Now, DateTime.Now, 0, "N", 0);
+                this.startTime = DateTime.Now;
+                this.t_key = Globals.ds.trajectories.AddtrajectoriesRow((byte)trackedSkeleton, startTime, startTime, 0, "N", 0);
 
                 //Store this trajectory's row primary key
                 this.t_id = t_key.t_id;

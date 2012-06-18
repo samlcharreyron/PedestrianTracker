@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using System.Windows.Media.Media3D;
 using _3DTools;
 using Petzold.Media3D;
+using PedestrianTracker.Properties;
 
 namespace PedestrianTracker
 {
@@ -41,86 +42,23 @@ namespace PedestrianTracker
 
             model.Children.Add(axes);
 
-            BuildPlane();
+            WireLine roadAxis = new WireLine()
+            {
+                Point1 = new Point3D(-10, 0, 0),
+                Point2 = new Point3D(10, 0, 0),
+                Thickness = 5.0,
+                Color = Colors.BlueViolet,
+                ArrowEnds = Petzold.Media2D.ArrowEnds.End,
+                Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), Settings.Default.KinectAngle))
+            };
 
-            DrawLastTrajectory();
-        }
+            model.Children.Add(roadAxis);
 
-        private void BuildSolid()
-        {
-            // Define 3D mesh object
-            MeshGeometry3D mesh = new MeshGeometry3D();
+            if (Globals.ds.trajectories.Count > 0)
+            {
+                DrawTrajectory(Globals.ds.trajectories[Globals.ds.trajectories.Count - 1].t_id,Colors.Red);
+            }
 
-            mesh.Positions.Add(new Point3D(-0.5, -0.5, 1));
-            //mesh.Normals.Add(new Vector3D(0, 0, 1));
-            mesh.Positions.Add(new Point3D(0.5, -0.5, 1));
-            //mesh.Normals.Add(new Vector3D(0, 0, 1));
-            mesh.Positions.Add(new Point3D(0.5, 0.5, 1));
-            //mesh.Normals.Add(new Vector3D(0, 0, 1));
-            mesh.Positions.Add(new Point3D(-0.5, 0.5, 1));
-            //mesh.Normals.Add(new Vector3D(0, 0, 1));
-
-            mesh.Positions.Add(new Point3D(-1, -1, -1));
-            //mesh.Normals.Add(new Vector3D(0, 0, -1));
-            mesh.Positions.Add(new Point3D(1, -1, -1));
-            //mesh.Normals.Add(new Vector3D(0, 0, -1));
-            mesh.Positions.Add(new Point3D(1, 1, -1));
-            //mesh.Normals.Add(new Vector3D(0, 0, -1));
-            mesh.Positions.Add(new Point3D(-1, 1, -1));
-            //mesh.Normals.Add(new Vector3D(0, 0, -1));
-
-            // Front face
-            mesh.TriangleIndices.Add(0);
-            mesh.TriangleIndices.Add(1);
-            mesh.TriangleIndices.Add(2);
-            mesh.TriangleIndices.Add(2);
-            mesh.TriangleIndices.Add(3);
-            mesh.TriangleIndices.Add(0);
-
-            // Back face
-            mesh.TriangleIndices.Add(6);
-            mesh.TriangleIndices.Add(5);
-            mesh.TriangleIndices.Add(4);
-            mesh.TriangleIndices.Add(4);
-            mesh.TriangleIndices.Add(7);
-            mesh.TriangleIndices.Add(6);
-
-            // Right face
-            mesh.TriangleIndices.Add(1);
-            mesh.TriangleIndices.Add(5);
-            mesh.TriangleIndices.Add(2);
-            mesh.TriangleIndices.Add(5);
-            mesh.TriangleIndices.Add(6);
-            mesh.TriangleIndices.Add(2);
-
-            // Top face
-            mesh.TriangleIndices.Add(2);
-            mesh.TriangleIndices.Add(6);
-            mesh.TriangleIndices.Add(3);
-            mesh.TriangleIndices.Add(3);
-            mesh.TriangleIndices.Add(6);
-            mesh.TriangleIndices.Add(7);
-
-            // Bottom face
-            mesh.TriangleIndices.Add(5);
-            mesh.TriangleIndices.Add(1);
-            mesh.TriangleIndices.Add(0);
-            mesh.TriangleIndices.Add(0);
-            mesh.TriangleIndices.Add(4);
-            mesh.TriangleIndices.Add(5);
-
-            // Right face
-            mesh.TriangleIndices.Add(4);
-            mesh.TriangleIndices.Add(0);
-            mesh.TriangleIndices.Add(3);
-            mesh.TriangleIndices.Add(3);
-            mesh.TriangleIndices.Add(7);
-            mesh.TriangleIndices.Add(4);
-
-            // Geometry creation
-            mGeometry = new GeometryModel3D(mesh, new DiffuseMaterial(Brushes.YellowGreen));
-            mGeometry.Transform = new Transform3DGroup();
-            group.Children.Add(mGeometry);
         }
 
         private void BuildPlane()
@@ -143,7 +81,7 @@ namespace PedestrianTracker
             group.Children.Add(mGeometry);
         }
 
-        private void DrawLastTrajectory()
+        private void DrawTrajectory(int t_id,Color color)
         {
 
             //find trajectory id of last inserted trajectory
@@ -153,7 +91,7 @@ namespace PedestrianTracker
                 return;
             }
 
-            int t_id = Globals.ds.trajectories[Globals.ds.trajectories.Count - 1].t_id;
+            //int t_id = Globals.ds.trajectories[Globals.ds.trajectories.Count - 1].t_id;
 
             TrajectoryDbDataSet.pointsRow[] pointsRows = (TrajectoryDbDataSet.pointsRow[])Globals.ds.points.Select("t_id = " + t_id);
             Point3D firstPoint = new Point3D((float)pointsRows[0].X,(float)pointsRows[0].Y,(float)pointsRows[0].Z);
@@ -179,17 +117,19 @@ namespace PedestrianTracker
 
             }
 
-            WireLines wl = new WireLines()
+             WirePolyline wl = new WirePolyline()
             {
-                Lines = pointCollection,
+                Points = pointCollection,
                 Thickness = 4,
-                Color = Colors.Red, 
+                Rounding = 3,
+                Color = color, 
             };
 
             model.Children.Add(wl);
             model.Transform = new Transform3DGroup();
         }
-        
+
+              
         private void Grid_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             camera.Position = new Point3D(camera.Position.X, camera.Position.Y, camera.Position.Z - e.Delta / 250D);
@@ -199,7 +139,7 @@ namespace PedestrianTracker
         {
             camera.Position = new Point3D(camera.Position.X, camera.Position.Y, 5);
             model.Transform = new Transform3DGroup();
-            //mGeometry.Transform = new Transform3DGroup();
+            
         }
 
         private void Grid_MouseMove(object sender, MouseEventArgs e)
@@ -246,6 +186,23 @@ namespace PedestrianTracker
         private void Grid_MouseUp(object sender, MouseButtonEventArgs e)
         {
             mDown = false;
+        }
+
+        private void ShowAllButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            foreach (TrajectoryDbDataSet.trajectoriesRow row in Globals.ds.trajectories.Rows)
+            {
+                if (row.t_id != Globals.ds.trajectories[Globals.ds.trajectories.Count - 1].t_id)
+                {
+                    //Choose random color for trajectory
+                    Random r = new Random();
+                    byte red = (byte)r.Next(0, byte.MaxValue + 1);
+                    byte green = (byte)r.Next(0, byte.MaxValue + 1);
+                    byte blue = (byte)r.Next(0, byte.MaxValue + 1);
+
+                    DrawTrajectory(row.t_id, Color.FromRgb(red, green, blue));
+                }
+            }
         }
     }
 }

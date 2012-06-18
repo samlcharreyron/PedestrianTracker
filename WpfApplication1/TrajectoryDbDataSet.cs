@@ -2,6 +2,10 @@
     
     
     public partial class TrajectoryDbDataSet {
+        partial class pointsDataTable
+        {
+        }
+    
         partial class trajectoriesDataTable
         {
         }

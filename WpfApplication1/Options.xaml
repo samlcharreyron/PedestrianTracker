@@ -16,7 +16,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <TextBlock Text="Horizontal angle of Kinect to road     " Grid.Row="0" Grid.Column="0"/>
-        <TextBox Text="{Binding Source={StaticResource Settings}, Path=Default.Angle}" Height="20" Width="30" VerticalAlignment="Top" Grid.Row="0" Grid.Column="1"/>
+        <TextBox Name="KinectAngleText" Text="{Binding Source={StaticResource Settings}, Path=Default.Angle}" Height="20" Width="30" VerticalAlignment="Top" Grid.Row="0" Grid.Column="1"/>
         <TextBlock Text="Tracking data frames per sample     " Grid.Row="1" Grid.Column="0"/>
         <TextBox Text="{Binding Source={StaticResource Settings}, Path=Default.TrajectorySubsample}" Height="20" Width="30" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
         <StackPanel Grid.Row="2">

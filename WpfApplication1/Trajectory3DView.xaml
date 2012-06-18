@@ -8,6 +8,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Button x:Name="button" Grid.Row="0" Content="Reset" Click="Button_Click"/>
@@ -27,5 +28,6 @@
                 </ModelVisual3D.Content>
             </ModelVisual3D>
         </Viewport3D>
+        <Button x:Name="ShowAllButton" Grid.Row="2" Content="Show All" Click="ShowAllButton_Clicked" Width="80" HorizontalAlignment="Right"/>
     </Grid>
 </Window>

@@ -17,6 +17,8 @@ namespace PedestrianTracker
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
+    /// 
+
     public partial class Options : Window
     {
         Settings mySettings;
@@ -24,11 +26,12 @@ namespace PedestrianTracker
         public Options()
         {
             InitializeComponent();
+            mySettings = new Settings();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            mySettings = new Settings(); 
+            
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -53,7 +56,6 @@ namespace PedestrianTracker
         {
             TrySetAngle((int)e.NewValue);
         }
-
-        
+ 
     }
 }

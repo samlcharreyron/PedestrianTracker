@@ -349,6 +349,8 @@ namespace PedestrianTracker {
             
             private global::System.Data.DataColumn columnt_id;
             
+            private global::System.Data.DataColumn columnmilliseconds;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public pointsDataTable() {
@@ -464,6 +466,14 @@ namespace PedestrianTracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn millisecondsColumn {
+                get {
+                    return this.columnmilliseconds;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -499,7 +509,7 @@ namespace PedestrianTracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public pointsRow AddpointsRow(double X, double Y, double Z, double distance, double deltaDistance, double velocity, string direction, byte skeleton, trajectoriesRow parenttrajectoriesRowByFK_points_trajectories) {
+            public pointsRow AddpointsRow(double X, double Y, double Z, double distance, double deltaDistance, double velocity, string direction, byte skeleton, trajectoriesRow parenttrajectoriesRowByFK_points_trajectories, int milliseconds) {
                 pointsRow rowpointsRow = ((pointsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         X,
@@ -511,7 +521,8 @@ namespace PedestrianTracker {
                         direction,
                         skeleton,
                         null,
-                        null};
+                        null,
+                        milliseconds};
                 if ((parenttrajectoriesRowByFK_points_trajectories != null)) {
                     columnValuesArray[9] = parenttrajectoriesRowByFK_points_trajectories[6];
                 }
@@ -554,6 +565,7 @@ namespace PedestrianTracker {
                 this.columnskeleton = base.Columns["skeleton"];
                 this.columnp_id = base.Columns["p_id"];
                 this.columnt_id = base.Columns["t_id"];
+                this.columnmilliseconds = base.Columns["milliseconds"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -579,6 +591,8 @@ namespace PedestrianTracker {
                 base.Columns.Add(this.columnp_id);
                 this.columnt_id = new global::System.Data.DataColumn("t_id", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnt_id);
+                this.columnmilliseconds = new global::System.Data.DataColumn("milliseconds", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnmilliseconds);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnp_id}, true));
                 this.columndirection.MaxLength = 1;
@@ -1236,6 +1250,22 @@ namespace PedestrianTracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int milliseconds {
+                get {
+                    try {
+                        return ((int)(this[this.tablepoints.millisecondsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'milliseconds\' in table \'points\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tablepoints.millisecondsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public trajectoriesRow trajectoriesRow {
                 get {
                     return ((trajectoriesRow)(this.GetParentRow(this.Table.ParentRelations["FK_points_trajectories"])));
@@ -1351,6 +1381,18 @@ namespace PedestrianTracker {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void Sett_idNull() {
                 this[this.tablepoints.t_idColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsmillisecondsNull() {
+                return this.IsNull(this.tablepoints.millisecondsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetmillisecondsNull() {
+                this[this.tablepoints.millisecondsColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -1694,10 +1736,11 @@ namespace PedestrianTracker.TrajectoryDbDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("skeleton", "skeleton");
             tableMapping.ColumnMappings.Add("p_id", "p_id");
             tableMapping.ColumnMappings.Add("t_id", "t_id");
+            tableMapping.ColumnMappings.Add("milliseconds", "milliseconds");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [dbo].[points] WHERE (((@IsNull_X = 1 AND [X] IS NULL) OR ([X] = @Original_X)) AND ((@IsNull_Y = 1 AND [Y] IS NULL) OR ([Y] = @Original_Y)) AND ((@IsNull_Z = 1 AND [Z] IS NULL) OR ([Z] = @Original_Z)) AND ((@IsNull_distance = 1 AND [distance] IS NULL) OR ([distance] = @Original_distance)) AND ((@IsNull_deltaDistance = 1 AND [deltaDistance] IS NULL) OR ([deltaDistance] = @Original_deltaDistance)) AND ((@IsNull_velocity = 1 AND [velocity] IS NULL) OR ([velocity] = @Original_velocity)) AND ((@IsNull_direction = 1 AND [direction] IS NULL) OR ([direction] = @Original_direction)) AND ((@IsNull_skeleton = 1 AND [skeleton] IS NULL) OR ([skeleton] = @Original_skeleton)) AND ([p_id] = @Original_p_id) AND ((@IsNull_t_id = 1 AND [t_id] IS NULL) OR ([t_id] = @Original_t_id)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [points] WHERE (((@IsNull_X = 1 AND [X] IS NULL) OR ([X] = @Original_X)) AND ((@IsNull_Y = 1 AND [Y] IS NULL) OR ([Y] = @Original_Y)) AND ((@IsNull_Z = 1 AND [Z] IS NULL) OR ([Z] = @Original_Z)) AND ((@IsNull_distance = 1 AND [distance] IS NULL) OR ([distance] = @Original_distance)) AND ((@IsNull_deltaDistance = 1 AND [deltaDistance] IS NULL) OR ([deltaDistance] = @Original_deltaDistance)) AND ((@IsNull_velocity = 1 AND [velocity] IS NULL) OR ([velocity] = @Original_velocity)) AND ((@IsNull_direction = 1 AND [direction] IS NULL) OR ([direction] = @Original_direction)) AND ((@IsNull_skeleton = 1 AND [skeleton] IS NULL) OR ([skeleton] = @Original_skeleton)) AND ((@IsNull_milliseconds = 1 AND [milliseconds] IS NULL) OR ([milliseconds] = @Original_milliseconds)) AND ([p_id] = @Original_p_id) AND ((@IsNull_t_id = 1 AND [t_id] IS NULL) OR ([t_id] = @Original_t_id)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_X", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "X", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_X", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "X", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -1715,13 +1758,15 @@ namespace PedestrianTracker.TrajectoryDbDataSetTableAdapters {
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_direction", global::System.Data.SqlDbType.Char, 0, global::System.Data.ParameterDirection.Input, 0, 0, "direction", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_skeleton", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "skeleton", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_skeleton", global::System.Data.SqlDbType.TinyInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "skeleton", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_milliseconds", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "milliseconds", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_milliseconds", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "milliseconds", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_p_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "p_id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_t_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "t_id", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_t_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "t_id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[points] ([X], [Y], [Z], [distance], [deltaDistance], [velocity], [direction], [skeleton], [t_id]) VALUES (@X, @Y, @Z, @distance, @deltaDistance, @velocity, @direction, @skeleton, @t_id);
-SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_id FROM points WHERE (p_id = SCOPE_IDENTITY())";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [points] ([X], [Y], [Z], [distance], [deltaDistance], [velocity], [direction], [skeleton], [milliseconds], [t_id]) VALUES (@X, @Y, @Z, @distance, @deltaDistance, @velocity, @direction, @skeleton, @milliseconds, @t_id);
+SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, milliseconds, p_id, t_id FROM points WHERE (p_id = SCOPE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@X", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "X", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Y", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Y", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -1731,11 +1776,12 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@velocity", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "velocity", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@direction", global::System.Data.SqlDbType.Char, 0, global::System.Data.ParameterDirection.Input, 0, 0, "direction", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@skeleton", global::System.Data.SqlDbType.TinyInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "skeleton", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@milliseconds", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "milliseconds", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@t_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "t_id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[points] SET [X] = @X, [Y] = @Y, [Z] = @Z, [distance] = @distance, [deltaDistance] = @deltaDistance, [velocity] = @velocity, [direction] = @direction, [skeleton] = @skeleton, [t_id] = @t_id WHERE (((@IsNull_X = 1 AND [X] IS NULL) OR ([X] = @Original_X)) AND ((@IsNull_Y = 1 AND [Y] IS NULL) OR ([Y] = @Original_Y)) AND ((@IsNull_Z = 1 AND [Z] IS NULL) OR ([Z] = @Original_Z)) AND ((@IsNull_distance = 1 AND [distance] IS NULL) OR ([distance] = @Original_distance)) AND ((@IsNull_deltaDistance = 1 AND [deltaDistance] IS NULL) OR ([deltaDistance] = @Original_deltaDistance)) AND ((@IsNull_velocity = 1 AND [velocity] IS NULL) OR ([velocity] = @Original_velocity)) AND ((@IsNull_direction = 1 AND [direction] IS NULL) OR ([direction] = @Original_direction)) AND ((@IsNull_skeleton = 1 AND [skeleton] IS NULL) OR ([skeleton] = @Original_skeleton)) AND ([p_id] = @Original_p_id) AND ((@IsNull_t_id = 1 AND [t_id] IS NULL) OR ([t_id] = @Original_t_id)));
-SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_id FROM points WHERE (p_id = @p_id)";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [points] SET [X] = @X, [Y] = @Y, [Z] = @Z, [distance] = @distance, [deltaDistance] = @deltaDistance, [velocity] = @velocity, [direction] = @direction, [skeleton] = @skeleton, [milliseconds] = @milliseconds, [t_id] = @t_id WHERE (((@IsNull_X = 1 AND [X] IS NULL) OR ([X] = @Original_X)) AND ((@IsNull_Y = 1 AND [Y] IS NULL) OR ([Y] = @Original_Y)) AND ((@IsNull_Z = 1 AND [Z] IS NULL) OR ([Z] = @Original_Z)) AND ((@IsNull_distance = 1 AND [distance] IS NULL) OR ([distance] = @Original_distance)) AND ((@IsNull_deltaDistance = 1 AND [deltaDistance] IS NULL) OR ([deltaDistance] = @Original_deltaDistance)) AND ((@IsNull_velocity = 1 AND [velocity] IS NULL) OR ([velocity] = @Original_velocity)) AND ((@IsNull_direction = 1 AND [direction] IS NULL) OR ([direction] = @Original_direction)) AND ((@IsNull_skeleton = 1 AND [skeleton] IS NULL) OR ([skeleton] = @Original_skeleton)) AND ((@IsNull_milliseconds = 1 AND [milliseconds] IS NULL) OR ([milliseconds] = @Original_milliseconds)) AND ([p_id] = @Original_p_id) AND ((@IsNull_t_id = 1 AND [t_id] IS NULL) OR ([t_id] = @Original_t_id)));
+SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, milliseconds, p_id, t_id FROM points WHERE (p_id = @p_id)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@X", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "X", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Y", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Y", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -1745,6 +1791,7 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@velocity", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "velocity", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@direction", global::System.Data.SqlDbType.Char, 0, global::System.Data.ParameterDirection.Input, 0, 0, "direction", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@skeleton", global::System.Data.SqlDbType.TinyInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "skeleton", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@milliseconds", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "milliseconds", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@t_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "t_id", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_X", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "X", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_X", global::System.Data.SqlDbType.Float, 0, global::System.Data.ParameterDirection.Input, 0, 0, "X", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -1762,6 +1809,8 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_direction", global::System.Data.SqlDbType.Char, 0, global::System.Data.ParameterDirection.Input, 0, 0, "direction", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_skeleton", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "skeleton", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_skeleton", global::System.Data.SqlDbType.TinyInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "skeleton", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_milliseconds", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "milliseconds", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_milliseconds", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "milliseconds", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_p_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "p_id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_t_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "t_id", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_t_id", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "t_id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
@@ -1781,8 +1830,8 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_i" +
-                "d FROM dbo.points";
+            this._commandCollection[0].CommandText = "SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, milliseco" +
+                "nds, p_id, t_id FROM points";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -1843,7 +1892,7 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(global::System.Nullable<double> Original_X, global::System.Nullable<double> Original_Y, global::System.Nullable<double> Original_Z, global::System.Nullable<double> Original_distance, global::System.Nullable<double> Original_deltaDistance, global::System.Nullable<double> Original_velocity, string Original_direction, global::System.Nullable<byte> Original_skeleton, int Original_p_id, global::System.Nullable<int> Original_t_id) {
+        public virtual int Delete(global::System.Nullable<double> Original_X, global::System.Nullable<double> Original_Y, global::System.Nullable<double> Original_Z, global::System.Nullable<double> Original_distance, global::System.Nullable<double> Original_deltaDistance, global::System.Nullable<double> Original_velocity, string Original_direction, global::System.Nullable<byte> Original_skeleton, global::System.Nullable<int> Original_milliseconds, int Original_p_id, global::System.Nullable<int> Original_t_id) {
             if ((Original_X.HasValue == true)) {
                 this.Adapter.DeleteCommand.Parameters[0].Value = ((object)(0));
                 this.Adapter.DeleteCommand.Parameters[1].Value = ((double)(Original_X.Value));
@@ -1908,14 +1957,22 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
                 this.Adapter.DeleteCommand.Parameters[14].Value = ((object)(1));
                 this.Adapter.DeleteCommand.Parameters[15].Value = global::System.DBNull.Value;
             }
-            this.Adapter.DeleteCommand.Parameters[16].Value = ((int)(Original_p_id));
-            if ((Original_t_id.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[18].Value = ((int)(Original_t_id.Value));
+            if ((Original_milliseconds.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[16].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[17].Value = ((int)(Original_milliseconds.Value));
             }
             else {
-                this.Adapter.DeleteCommand.Parameters[17].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[18].Value = global::System.DBNull.Value;
+                this.Adapter.DeleteCommand.Parameters[16].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[17].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.DeleteCommand.Parameters[18].Value = ((int)(Original_p_id));
+            if ((Original_t_id.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[19].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[20].Value = ((int)(Original_t_id.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[19].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[20].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -1937,7 +1994,7 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(global::System.Nullable<double> X, global::System.Nullable<double> Y, global::System.Nullable<double> Z, global::System.Nullable<double> distance, global::System.Nullable<double> deltaDistance, global::System.Nullable<double> velocity, string direction, global::System.Nullable<byte> skeleton, global::System.Nullable<int> t_id) {
+        public virtual int Insert(global::System.Nullable<double> X, global::System.Nullable<double> Y, global::System.Nullable<double> Z, global::System.Nullable<double> distance, global::System.Nullable<double> deltaDistance, global::System.Nullable<double> velocity, string direction, global::System.Nullable<byte> skeleton, global::System.Nullable<int> milliseconds, global::System.Nullable<int> t_id) {
             if ((X.HasValue == true)) {
                 this.Adapter.InsertCommand.Parameters[0].Value = ((double)(X.Value));
             }
@@ -1986,11 +2043,17 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
             else {
                 this.Adapter.InsertCommand.Parameters[7].Value = global::System.DBNull.Value;
             }
-            if ((t_id.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[8].Value = ((int)(t_id.Value));
+            if ((milliseconds.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[8].Value = ((int)(milliseconds.Value));
             }
             else {
                 this.Adapter.InsertCommand.Parameters[8].Value = global::System.DBNull.Value;
+            }
+            if ((t_id.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[9].Value = ((int)(t_id.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[9].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -2021,6 +2084,7 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
                     global::System.Nullable<double> velocity, 
                     string direction, 
                     global::System.Nullable<byte> skeleton, 
+                    global::System.Nullable<int> milliseconds, 
                     global::System.Nullable<int> t_id, 
                     global::System.Nullable<double> Original_X, 
                     global::System.Nullable<double> Original_Y, 
@@ -2030,6 +2094,7 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
                     global::System.Nullable<double> Original_velocity, 
                     string Original_direction, 
                     global::System.Nullable<byte> Original_skeleton, 
+                    global::System.Nullable<int> Original_milliseconds, 
                     int Original_p_id, 
                     global::System.Nullable<int> Original_t_id, 
                     int p_id) {
@@ -2081,86 +2146,100 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
             else {
                 this.Adapter.UpdateCommand.Parameters[7].Value = global::System.DBNull.Value;
             }
-            if ((t_id.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((int)(t_id.Value));
+            if ((milliseconds.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[8].Value = ((int)(milliseconds.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[8].Value = global::System.DBNull.Value;
             }
-            if ((Original_X.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[9].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[10].Value = ((double)(Original_X.Value));
+            if ((t_id.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[9].Value = ((int)(t_id.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[9].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[10].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            if ((Original_X.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[11].Value = ((double)(Original_X.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[10].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[11].Value = global::System.DBNull.Value;
             }
             if ((Original_Y.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[12].Value = ((double)(Original_Y.Value));
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((double)(Original_Y.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[12].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[13].Value = global::System.DBNull.Value;
             }
             if ((Original_Z.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[14].Value = ((double)(Original_Z.Value));
+                this.Adapter.UpdateCommand.Parameters[14].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[15].Value = ((double)(Original_Z.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[14].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[14].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[15].Value = global::System.DBNull.Value;
             }
             if ((Original_distance.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[16].Value = ((double)(Original_distance.Value));
+                this.Adapter.UpdateCommand.Parameters[16].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[17].Value = ((double)(Original_distance.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[15].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[16].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[16].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[17].Value = global::System.DBNull.Value;
             }
             if ((Original_deltaDistance.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[18].Value = ((double)(Original_deltaDistance.Value));
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[19].Value = ((double)(Original_deltaDistance.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[17].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[18].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[18].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[19].Value = global::System.DBNull.Value;
             }
             if ((Original_velocity.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[20].Value = ((double)(Original_velocity.Value));
+                this.Adapter.UpdateCommand.Parameters[20].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[21].Value = ((double)(Original_velocity.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[19].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[20].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[20].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[21].Value = global::System.DBNull.Value;
             }
             if ((Original_direction == null)) {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[22].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[22].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[23].Value = global::System.DBNull.Value;
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[22].Value = ((string)(Original_direction));
+                this.Adapter.UpdateCommand.Parameters[22].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[23].Value = ((string)(Original_direction));
             }
             if ((Original_skeleton.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[24].Value = ((byte)(Original_skeleton.Value));
+                this.Adapter.UpdateCommand.Parameters[24].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[25].Value = ((byte)(Original_skeleton.Value));
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[23].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[24].Value = global::System.DBNull.Value;
+                this.Adapter.UpdateCommand.Parameters[24].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[25].Value = global::System.DBNull.Value;
             }
-            this.Adapter.UpdateCommand.Parameters[25].Value = ((int)(Original_p_id));
-            if ((Original_t_id.HasValue == true)) {
+            if ((Original_milliseconds.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[26].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[27].Value = ((int)(Original_t_id.Value));
+                this.Adapter.UpdateCommand.Parameters[27].Value = ((int)(Original_milliseconds.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[26].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[27].Value = global::System.DBNull.Value;
             }
-            this.Adapter.UpdateCommand.Parameters[28].Value = ((int)(p_id));
+            this.Adapter.UpdateCommand.Parameters[28].Value = ((int)(Original_p_id));
+            if ((Original_t_id.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[29].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[30].Value = ((int)(Original_t_id.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[29].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[30].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[31].Value = ((int)(p_id));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -2190,6 +2269,7 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
                     global::System.Nullable<double> velocity, 
                     string direction, 
                     global::System.Nullable<byte> skeleton, 
+                    global::System.Nullable<int> milliseconds, 
                     global::System.Nullable<int> t_id, 
                     global::System.Nullable<double> Original_X, 
                     global::System.Nullable<double> Original_Y, 
@@ -2199,9 +2279,10 @@ SELECT X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, p_id, t_
                     global::System.Nullable<double> Original_velocity, 
                     string Original_direction, 
                     global::System.Nullable<byte> Original_skeleton, 
+                    global::System.Nullable<int> Original_milliseconds, 
                     int Original_p_id, 
                     global::System.Nullable<int> Original_t_id) {
-            return this.Update(X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, t_id, Original_X, Original_Y, Original_Z, Original_distance, Original_deltaDistance, Original_velocity, Original_direction, Original_skeleton, Original_p_id, Original_t_id, Original_p_id);
+            return this.Update(X, Y, Z, distance, deltaDistance, velocity, direction, skeleton, milliseconds, t_id, Original_X, Original_Y, Original_Z, Original_distance, Original_deltaDistance, Original_velocity, Original_direction, Original_skeleton, Original_milliseconds, Original_p_id, Original_t_id, Original_p_id);
         }
     }
     
