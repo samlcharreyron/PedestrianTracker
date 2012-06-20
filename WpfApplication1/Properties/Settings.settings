@@ -25,5 +25,8 @@
     <Setting Name="RenderWidth" Type="System.Single" Scope="User">
       <Value Profile="(Default)">640</Value>
     </Setting>
+    <Setting Name="dbTimerSetting" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">3600000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -52,7 +52,6 @@ namespace PedestrianTracker
         private const double VelocityLowThreshold = 0.3;
         private const double VelocityHighThreshold = 0.3;
 
-
         //The angle in degrees between the road and the kinect heading (0 if tracking horizontally), 90 if tracking head on)
         private int TrackingAngle = 0;
         private float AngleProjectionFactorX = 1;
@@ -66,6 +65,9 @@ namespace PedestrianTracker
         private PathFigureCollection trajectoryPathFigureCollection;
         private PathGeometry trajectoryPathGeometry;
         private FormattedText trajectoryText;
+
+        //Enables drawing functionality
+        public bool shouldDraw = true;
         
         //Brushes
         private Brush TrajectoryBrush = Brushes.Red;
@@ -129,7 +131,11 @@ namespace PedestrianTracker
                 }
 
                 this.pointList.Add(point);
-                this.AddSegment(point);
+                
+                if (shouldDraw)
+                {
+                    this.AddSegment(point);
+                }
             }
 
             catch
@@ -212,7 +218,6 @@ namespace PedestrianTracker
                     //horizotal distance is used as delta distance
                     deltaDistance = Math.Abs(deltaP);
 
-                    //velocity[k] = (distance[k]-distance[k-1])*(framerate/subsampling)
                     velocity = deltaDistance * (30 / FrameSub);
 
                     //filters out erroneous data
@@ -246,6 +251,7 @@ namespace PedestrianTracker
             this.currentSkeleton = skeleton;
             this.trackedSkeleton = trackedSkeleton;
             this.currentPoint = center;
+
             this.AddPoint(currentPoint);
 
             switch (trackedSkeleton)
@@ -274,10 +280,14 @@ namespace PedestrianTracker
             }
 
             //Draw the trajectory
-            this.trajectoryPathFigure = new PathFigure(pointList.First(), trajectoryPathSegments, false);
-            this.trajectoryPathFigureCollection = new PathFigureCollection();
-            this.trajectoryPathFigureCollection.Add(trajectoryPathFigure);
-            this.trajectoryPathGeometry = new PathGeometry(trajectoryPathFigureCollection);
+            if (shouldDraw)
+            {
+                this.trajectoryPathFigure = new PathFigure(pointList.First(), trajectoryPathSegments, false);
+                this.trajectoryPathFigureCollection = new PathFigureCollection();
+                this.trajectoryPathFigureCollection.Add(trajectoryPathFigure);
+                this.trajectoryPathGeometry = new PathGeometry(trajectoryPathFigureCollection);
+            }
+            
 
             //At first point add trajectory row to dataset
             if (pointList.Count == 1)
@@ -329,7 +339,7 @@ namespace PedestrianTracker
         {
             try
             {
-                byte milliseconds = (byte) DateTime.Now.Subtract(startTime).TotalMilliseconds;
+                int milliseconds = (int)DateTime.Now.Subtract(startTime).TotalMilliseconds;
                 Globals.ds.points.AddpointsRow(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction, (byte) trackedSkeleton, t_key,milliseconds);
             }
             catch
@@ -386,6 +396,10 @@ namespace PedestrianTracker
                     rows++;
                 }
 
+
+                ///<summary>
+                ///Filtering out outliers. Find the standard deviation of all velocity values.  If values lie outside of two standard
+                ///deviations they are ignored from the average velocity calculation.
                 double mean = velocities.Average();
                 double stdev = StandardDeviation(velocities);
                 int n = 0;
@@ -416,7 +430,7 @@ namespace PedestrianTracker
         {
             base.OnRender(drawingContext);
 
-            if (currentSkeleton != null && currentSkeleton.TrackingState == SkeletonTrackingState.PositionOnly)
+            if (currentSkeleton != null && currentSkeleton.TrackingState == SkeletonTrackingState.PositionOnly && shouldDraw)
             {
                 drawingContext.DrawEllipse(
                             this.centerPointBrush,

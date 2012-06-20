@@ -10,21 +10,24 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition Height="Auto"/>
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <TextBlock Text="Horizontal angle of Kinect to road     " Grid.Row="0" Grid.Column="0"/>
+        <Label FontWeight="Bold" Grid.Row="0" Grid.Column="0">Horizontal angle of Kinect to road</Label>
         <TextBox Name="KinectAngleText" Text="{Binding Source={StaticResource Settings}, Path=Default.Angle}" Height="20" Width="30" VerticalAlignment="Top" Grid.Row="0" Grid.Column="1"/>
-        <TextBlock Text="Tracking data frames per sample     " Grid.Row="1" Grid.Column="0"/>
-        <TextBox Text="{Binding Source={StaticResource Settings}, Path=Default.TrajectorySubsample}" Height="20" Width="30" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
-        <StackPanel Grid.Row="2">
-            <Label FontWeight="Bold" Target="{Binding ElementName=ElevationAngle}">._ElevationAngle</Label>
+        <Label FontWeight="Bold" Grid.Row="1" Grid.Column="0">Tracking data frames per sample</Label>
+        <TextBox FontWeight="Bold" Text="{Binding Source={StaticResource Settings}, Path=Default.TrajectorySubsample}" Height="20" Width="30" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1"/>
+        <Label Grid.Column="0" Grid.Row="2" FontWeight="Bold" Target="{Binding ElementName=ElevationAngle}">ElevationAngle</Label>
+        <StackPanel Grid.Column="1" Grid.Row="2">
             <TextBox Text="{Binding ElementName=ElevationAngle,Path=Value}" IsEnabled="False"/>
             <Slider Name="ElevationAngle" Orientation="Vertical" Minimum="-27" Maximum="27" Height="100" HorizontalAlignment="Center" 
                         TickFrequency="1" TickPlacement="BottomRight" Value="{Binding Source={StaticResource Settings}, Path=Default.VerticalAngle}"
                         ValueChanged="ElevationAngleChanged" IsSnapToTickEnabled="True" />
         </StackPanel>
+        <Label FontWeight="Bold" Grid.Column="0" Grid.Row="3">Milliseconds between database updates</Label>
+        <TextBox Grid.Column="1" Grid.Row="3" Height ="20" Width="60" VerticalAlignment="Top"  Text="{Binding Source={StaticResource Settings}, Path=Default.dbTimerSetting}" />
     </Grid>
 </Window>

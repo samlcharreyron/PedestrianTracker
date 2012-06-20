@@ -21,22 +21,20 @@ namespace PedestrianTracker
 
     public partial class Options : Window
     {
-        Settings mySettings;
 
         public Options()
         {
             InitializeComponent();
-            mySettings = new Settings();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            mySettings.Save();
+
         }
 
         public static bool TrySetAngle(int angle)

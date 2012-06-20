@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1">
-  <asmv1:assemblyIdentity name="PedestrianTracker.exe" version="1.0.0.1" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" type="win32" />
+  <asmv1:assemblyIdentity name="PedestrianTracker.exe" version="1.0.0.2" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" type="win32" />
   <application />
   <entryPoint>
     <assemblyIdentity name="PedestrianTracker" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
@@ -64,14 +64,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PedestrianTracker.exe" size="123904">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PedestrianTracker.exe" size="125952">
       <assemblyIdentity name="PedestrianTracker" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>qT7olUHAZdTk2zL29qImO1LzR6I=</dsig:DigestValue>
+        <dsig:DigestValue>AAgNoXgPjAAOojtXNrS2HKBC+jk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -87,13 +87,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="PedestrianTracker.exe.config" size="1696">
+  <file name="PedestrianTracker.exe.config" size="1826">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>N4Nzypik1RQHnsmNH63XXf9WXy8=</dsig:DigestValue>
+      <dsig:DigestValue>zgtgqNXSA558Z3QxHaIzeXIQ9Ew=</dsig:DigestValue>
     </hash>
   </file>
   <file name="TrajectoryDb.mdf" size="2359296" writeableType="applicationData">
@@ -102,7 +102,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>1wkhBXp482d+6b94nZbpr7KbiiU=</dsig:DigestValue>
+      <dsig:DigestValue>0JyiLi4bznfT+hor3uUK8i8Ghs4=</dsig:DigestValue>
     </hash>
   </file>
   <file name="TrajectoryDb_log.ldf" size="589824" writeableType="applicationData">
@@ -111,7 +111,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>dHLWPf7a9IUKucOoyXYBlilOvEs=</dsig:DigestValue>
+      <dsig:DigestValue>u+0rluUVjg0Y9hKieHLMvrCPDTo=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

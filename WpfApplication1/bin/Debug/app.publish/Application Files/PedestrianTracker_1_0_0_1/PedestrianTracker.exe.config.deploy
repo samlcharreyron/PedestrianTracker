@@ -27,9 +27,6 @@
             <setting name="RenderWidth" serializeAs="String">
                 <value>640</value>
             </setting>
-            <setting name="dbTimerSetting" serializeAs="String">
-                <value>3600000</value>
-            </setting>
         </PedestrianTracker.Properties.Settings>
     </userSettings>
 </configuration>

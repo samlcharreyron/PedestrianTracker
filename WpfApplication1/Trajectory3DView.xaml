@@ -2,7 +2,6 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:my="clr-namespace:PedestrianTracker"
-        xmlns:cp="http://schemas.charlespetzold.com/2007/xaml"
         Title="Trajectory 3D View" Height="600" Width="600">
     <Grid Background="Black" MouseWheel="Grid_MouseWheel" MouseDown="Grid_MouseDown" MouseUp="Grid_MouseUp" MouseMove="Grid_MouseMove">
         <Grid.RowDefinitions>

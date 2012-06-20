@@ -6,8 +6,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Pedestrian Counter"
-        MinHeight="620" MinWidth="670"
-        Height="600" Width="670"
+        MinWidth="670"
+        Height="650"
+        Width="670"
         ResizeMode="CanResizeWithGrip"
         Loaded="Window_Loaded" Closed="Window_Closed" Closing="Window_Closing" >
     <Window.Resources>
@@ -18,7 +19,8 @@
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition MinHeight="500" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <DockPanel>
@@ -53,49 +55,35 @@
             <TextBlock Text="Save trajectories to file    " Padding="10" VerticalAlignment="Center" />
             <Button Content="Export" Height="23" HorizontalAlignment="Left" Name="button1" Width="75" />
         </StackPanel -->
-        <Canvas x:Name="C1" Grid.Row="1">
-            <Image Name="image1" Height="{Binding Path= RenderHeight}" Width="{Binding Path= RenderHeight}"/>
-            <Viewport3D Name="viewport" Height="{Binding ElementName=image1, Path=ActualHeight}" Width="{Binding ElementName=image1,Path=ActualWidth}">
-                <Viewport3D.Camera>
-                    <PerspectiveCamera x:Name="camera"
-                        LookDirection="0,0,-1" UpDirection="0,1,0"
-                        Position="0,0,0" FieldOfView="45" />
-                </Viewport3D.Camera>
-                <ModelVisual3D x:Name="model">
-                    <ModelVisual3D.Content>
-                        <Model3DGroup x:Name="group">
-                            <AmbientLight Color="DarkGray" />
-                            <DirectionalLight Color="White" Direction="-5,-5,-7" />
-                        </Model3DGroup>
-                    </ModelVisual3D.Content>
-                </ModelVisual3D>
-            </Viewport3D>
-
-            <!--Line x:Name="RoadAxis" Stroke="Black" StrokeThickness="4">
-                <Line.X1>0</Line.X1>
-                <Line.X2>
-                    <Binding ElementName="image1" Path="ActualWidth"/> 
-                </Line.X2>
-                <Line.Y1>
-                    <Binding Converter="{StaticResource RoadAxisY1PaddingConverter}" ConverterParameter="20" ElementName="image1" Path="ActualHeight"/>
-                </Line.Y1>
-                <Line.Y2>
-                    <MultiBinding Converter="{StaticResource RoadAxisY2PaddingConverter}" ConverterParameter="20">
-                        <Binding ElementName="image1" Path="ActualHeight" />
-                        <Binding ElementName="image1" Path="ActualWidth" />
-                        <Binding Source="{StaticResource Settings}" Path="Default.KinectAngle" />
-                    </MultiBinding>
-                </Line.Y2>
-            </Line -->            
-            <l:Trajectory x:Name="trajectoryCanvas1" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
-            <l:Trajectory x:Name="trajectoryCanvas2" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
-            <l:Trajectory x:Name="trajectoryCanvas3" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
-            <l:Trajectory x:Name="trajectoryCanvas4" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
-            <l:Trajectory x:Name="trajectoryCanvas5" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
-            <l:Trajectory x:Name="trajectoryCanvas6" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
-            <Image x:Name="pastTrajectories" Width="{Binding ElementName=image1, Path=ActualWidth}" Height="{Binding ElementName=image1, Path=ActualHeight}" />
-        </Canvas>
-        <Grid Name="MessageGrid" Grid.Row="2" Height="50" VerticalAlignment="Bottom">
+        <Expander x:Name="Expander" ExpandDirection="Down" Grid.Row="1" Expanded="Expander_Expanded" Collapsed="Expander_Collapsed">
+            <Canvas x:Name="C1">
+                <Image Name="image1" Height="{Binding Path= RenderHeight}" Width="{Binding Path= RenderHeight}"/>
+                <Viewport3D Name="viewport" Height="{Binding ElementName=image1, Path=ActualHeight}" Width="{Binding ElementName=image1,Path=ActualWidth}">
+                    <Viewport3D.Camera>
+                        <PerspectiveCamera x:Name="camera"
+                            LookDirection="0,0,-1" UpDirection="0,1,0"
+                            Position="0,0,0" FieldOfView="45" />
+                    </Viewport3D.Camera>
+                    <ModelVisual3D x:Name="model">
+                        <ModelVisual3D.Content>
+                            <Model3DGroup x:Name="group">
+                                <AmbientLight Color="DarkGray" />
+                                <DirectionalLight Color="White" Direction="-5,-5,-7" />
+                            </Model3DGroup>
+                        </ModelVisual3D.Content>
+                    </ModelVisual3D>
+                </Viewport3D> 
+                <l:Trajectory x:Name="trajectoryCanvas1" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+                <l:Trajectory x:Name="trajectoryCanvas2" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+                <l:Trajectory x:Name="trajectoryCanvas3" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+                <l:Trajectory x:Name="trajectoryCanvas4" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+                <l:Trajectory x:Name="trajectoryCanvas5" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+                <l:Trajectory x:Name="trajectoryCanvas6" Width="{Binding ElementName=image1,Path=ActualWidth}" Height="{Binding ElementName=image1,Path=ActualHeight}" />
+                <Image x:Name="pastTrajectories" Width="{Binding ElementName=image1, Path=ActualWidth}" Height="{Binding ElementName=image1, Path=ActualHeight}" />
+            </Canvas>
+        </Expander>
+        <!--Button x:Name="CollapseVisualsButton" Grid.Row="2" VerticalAlignment="Bottom" Click="CollapseVisualsButton_Click">Collapse Visuals</Button -->
+        <Grid Name="MessageGrid" Grid.Row="3" Height="30" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />

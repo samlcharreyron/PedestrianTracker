@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Media.Media3D;
-//using _3DTools;
+using System.Timers;
 using Petzold.Media3D;
 using Microsoft.Kinect;
 using PedestrianTracker.Properties;
@@ -75,6 +75,8 @@ namespace PedestrianTracker
         //Database stuff
         private System.Data.SqlClient.SqlConnection connection;
         public const string connectionString = @"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\TrajectoryDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True";
+        private Timer dbTimer;
+        private const double dbTimerSetting = 3600000; 
 
         //Dataset stuff
         private DataRow lastDataRow;
@@ -91,7 +93,6 @@ namespace PedestrianTracker
 
         public static readonly DependencyProperty SkeletonYProperty =
                 DependencyProperty.Register("SkeletonY", typeof(int), typeof(MainWindow), new UIPropertyMetadata(0));
-
 
         public int TotalPlayers
         {
@@ -134,7 +135,16 @@ namespace PedestrianTracker
             TotalPlayers = 0;
             PedestrianCounts = 0;
 
-            //SkeletonImage.Source = this.imageSource;
+            //Default to open visualiser
+            Expander.IsExpanded = true;
+
+            //Start the db timer to update every hour
+            dbTimer = new Timer(dbTimerSetting);
+            dbTimer.Elapsed += new ElapsedEventHandler(dbTimer_Elapsed);
+            dbTimer.Start();
+
+            //Add hook for settings events
+            Settings.Default.SettingChanging += new System.Configuration.SettingChangingEventHandler(Default_SettingChanging);
 
             loadKinect();
 
@@ -245,20 +255,23 @@ namespace PedestrianTracker
             //        96, 96, PixelFormats.Bgr32, null, pixels, stride);
             //}
 
-            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+            if (myKinect.ColorStream.IsEnabled)
             {
-                if (colorFrame == null)
+                using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
                 {
-                    return;
+                    if (colorFrame == null)
+                    {
+                        return;
+                    }
+
+                    byte[] pixels = new byte[colorFrame.PixelDataLength];
+                    colorFrame.CopyPixelDataTo(pixels);
+
+                    int stride = colorFrame.Width * 4;
+                    image1.Source =
+                        BitmapSource.Create(colorFrame.Width, colorFrame.Height,
+                        96, 96, PixelFormats.Bgr32, null, pixels, stride);
                 }
-
-                byte[] pixels = new byte[colorFrame.PixelDataLength];
-                colorFrame.CopyPixelDataTo(pixels);
-
-                int stride = colorFrame.Width * 4;
-                image1.Source =
-                    BitmapSource.Create(colorFrame.Width, colorFrame.Height,
-                    96, 96, PixelFormats.Bgr32, null, pixels, stride);
             }
 
 
@@ -482,10 +495,15 @@ namespace PedestrianTracker
         {
             int[] result = new int[2];
 
+            //Write to xml file
+            using (StreamWriter xmlSW = new StreamWriter("pedestrianData.xml"))
+            {
+                Globals.ds.WriteXml(xmlSW,XmlWriteMode.WriteSchema);
+            }
+
             using (connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-
 
                 //update trajectories
                 using (TrajectoryDbDataSetTableAdapters.trajectoriesTableAdapter trajectoriesDa = new TrajectoryDbDataSetTableAdapters.trajectoriesTableAdapter())
@@ -513,39 +531,131 @@ namespace PedestrianTracker
             return result;
         }
 
-        private void drawRoadAxis()
-        {
-            Point firstPoint;
+        /// <summary>
+        /// Drawing helper methods
+        /// </summary>
 
+        //private void drawRoadAxis()
+        //{
+        //    Point firstPoint;
+
+        //    try
+        //    {
+        //        firstPoint = SkeletonPointToPoint(-0.5f, 0.0f, 1f);
+        //    }
+
+        //    catch (Exception e)
+        //    {
+        //        return;
+        //    }
+
+        //    Point secondPoint = SkeletonPointToPoint(1, 0, 1);
+
+        //    Line line = new Line();
+        //    line.X1 = firstPoint.X;
+        //    line.Y1 = firstPoint.Y;
+        //    line.X2 = secondPoint.X;
+        //    line.Y2 = secondPoint.Y;
+        //    line.Stroke = Brushes.Red;
+        //    line.StrokeThickness = 4;
+
+        //    C1.Children.Add(line);
+
+        //    //drawingContext.DrawLine(new Pen(Brushes.Black,2),firstPoint, secondPoint);
+
+        //}
+
+        private Model3DGroup CreateTriangleModel(Point3D p0, Point3D p1, Point3D p2)
+        {
+            MeshGeometry3D mesh = new MeshGeometry3D();
+            mesh.Positions.Add(p0);
+            mesh.Positions.Add(p1);
+            mesh.Positions.Add(p2);
+            mesh.TriangleIndices.Add(0);
+            mesh.TriangleIndices.Add(1);
+            mesh.TriangleIndices.Add(2);
+            Vector3D normal = CalculateNormal(p0, p1, p2);
+            mesh.Normals.Add(normal);
+            mesh.Normals.Add(normal);
+            mesh.Normals.Add(normal);
+            Material material = new DiffuseMaterial(
+                new SolidColorBrush(Colors.Red)
+                {
+                    Opacity = 0.3
+                });
+            GeometryModel3D model = new GeometryModel3D(
+                mesh, material);
+            Model3DGroup group = new Model3DGroup();
+            group.Children.Add(model);
+            return group;
+        }
+        private Vector3D CalculateNormal(Point3D p0, Point3D p1, Point3D p2)
+        {
+            Vector3D v0 = new Vector3D(
+                p1.X - p0.X, p1.Y - p0.Y, p1.Z - p0.Z);
+            Vector3D v1 = new Vector3D(
+                p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
+            return Vector3D.CrossProduct(v1, v0);
+        }
+
+        private double FindYPoint(double X, double Z)
+        {
             try
             {
-                firstPoint = SkeletonPointToPoint(-0.5f, 0.0f, 1f);
+                return (-D - A * X - C * Z) / B;
             }
-
             catch (Exception e)
             {
-                return;
+                return 0.0;
             }
-
-            Point secondPoint = SkeletonPointToPoint(1, 0, 1);
-
-            Line line = new Line();
-            line.X1 = firstPoint.X;
-            line.Y1 = firstPoint.Y;
-            line.X2 = secondPoint.X;
-            line.Y2 = secondPoint.Y;
-            line.Stroke = Brushes.Red;
-            line.StrokeThickness = 4;
-
-            C1.Children.Add(line);
-
-            //drawingContext.DrawLine(new Pen(Brushes.Black,2),firstPoint, secondPoint);
-
         }
-        /*
-         * Menu Event Handlers
-         * 
-         */
+
+        private void DrawClippingPlane()
+        {
+            Model3DGroup plane = new Model3DGroup();
+
+            Point3D p0 = new Point3D(-planeWidth, FindYPoint(-planeWidth, -planeDepth), -planeDepth);
+            Point3D p1 = new Point3D(planeWidth, FindYPoint(planeWidth, -planeDepth), -planeDepth);
+            Point3D p2 = new Point3D(-planeWidth, FindYPoint(-planeWidth, 0), 0);
+            Point3D p3 = new Point3D(planeWidth, FindYPoint(planeWidth, 0), 0);
+
+            plane.Children.Add(CreateTriangleModel(p0, p1, p3));
+            plane.Children.Add(CreateTriangleModel(p1, p2, p3));
+
+            planeModel = new ModelVisual3D();
+            planeModel.Content = plane;
+            viewport.Children.Add(planeModel);
+        }
+
+        private void DrawRoadAxis()
+        {
+            Point3DCollection points = new Point3DCollection();
+
+            points.Add(new Point3D(-planeWidth, FindYPoint(-planeWidth, -10), -10));
+            points.Add(new Point3D(planeWidth, FindYPoint(planeWidth, -10), -10));
+
+            line = new WireLines()
+            {
+                Lines = points,
+                Color = Colors.Black,
+                Thickness = 4.0,
+            };
+
+            line.Transform = new RotateTransform3D()
+            {
+                Rotation = new AxisAngleRotation3D(new Vector3D(0, 1, 0), Settings.Default.KinectAngle),
+                CenterX = 0,
+                CenterY = 0,
+                CenterZ = -10
+            };
+
+            model.Children.Add(line);
+        }
+        /// <summary>
+        /// Menu event handlers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
         private void mnuFileExit_Click(object sender, RoutedEventArgs e)
         {
@@ -781,91 +891,68 @@ namespace PedestrianTracker
             traj3d.Show();
         }
 
-        private Model3DGroup CreateTriangleModel(Point3D p0, Point3D p1, Point3D p2)
+        //When the database timer reaches one hour, update the datasource
+        private void dbTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            MeshGeometry3D mesh = new MeshGeometry3D();
-            mesh.Positions.Add(p0);
-            mesh.Positions.Add(p1);
-            mesh.Positions.Add(p2);
-            mesh.TriangleIndices.Add(0);
-            mesh.TriangleIndices.Add(1);
-            mesh.TriangleIndices.Add(2);
-            Vector3D normal = CalculateNormal(p0, p1, p2);
-            mesh.Normals.Add(normal);
-            mesh.Normals.Add(normal);
-            mesh.Normals.Add(normal);
-            Material material = new DiffuseMaterial(
-                new SolidColorBrush(Colors.Red)
+            updateDatabase();
+        }
+
+        private void Default_SettingChanging(object sender, System.Configuration.SettingChangingEventArgs e)
+        {
+            if (line != null)
+            {
+                line.Transform = new RotateTransform3D()
                 {
-                    Opacity = 0.3
-                });
-            GeometryModel3D model = new GeometryModel3D(
-                mesh, material);
-            Model3DGroup group = new Model3DGroup();
-            group.Children.Add(model);
-            return group;
-        }
-        private Vector3D CalculateNormal(Point3D p0, Point3D p1, Point3D p2)
-        {
-            Vector3D v0 = new Vector3D(
-                p1.X - p0.X, p1.Y - p0.Y, p1.Z - p0.Z);
-            Vector3D v1 = new Vector3D(
-                p2.X - p1.X, p2.Y - p1.Y, p2.Z - p1.Z);
-            return Vector3D.CrossProduct(v1, v0);
-        }
-
-        private double FindYPoint(double X, double Z)
-        {
-            try
-            {
-                return (-D - A * X - C * Z) / B;
-            }
-            catch (Exception e)
-            {
-                return 0.0;
+                    Rotation = new AxisAngleRotation3D(new Vector3D(0, 1, 0), Settings.Default.KinectAngle),
+                    CenterX = 0,
+                    CenterY = 0,
+                    CenterZ = -10
+                };
             }
         }
 
-        private void DrawClippingPlane()
+        private void CollapseVisualsButton_Click(object sender, RoutedEventArgs e)
         {
-            Model3DGroup plane = new Model3DGroup();
-
-            Point3D p0 = new Point3D(-planeWidth, FindYPoint(-planeWidth, -planeDepth), -planeDepth);
-            Point3D p1 = new Point3D(planeWidth, FindYPoint(planeWidth, -planeDepth), -planeDepth);
-            Point3D p2 = new Point3D(-planeWidth, FindYPoint(-planeWidth, 0), 0);
-            Point3D p3 = new Point3D(planeWidth, FindYPoint(planeWidth, 0), 0);
-
-            plane.Children.Add(CreateTriangleModel(p0, p1, p3));
-            plane.Children.Add(CreateTriangleModel(p1, p2, p3));
-
-            planeModel = new ModelVisual3D();
-            planeModel.Content = plane;
-            viewport.Children.Add(planeModel);
-        }
-
-        private void DrawRoadAxis()
-        {
-            Point3DCollection points = new Point3DCollection();
-
-            points.Add(new Point3D(-planeWidth, FindYPoint(-planeWidth, -10), -10));
-            points.Add(new Point3D(planeWidth, FindYPoint(planeWidth, -10), -10));
-
-            line = new WireLines()
+            if (myKinect.ColorStream.IsEnabled)
             {
-                Lines = points,
-                Color = Colors.Black,
-                Thickness = 4.0,
-            };
-
-            line.Transform = new RotateTransform3D()
-            {Rotation = new AxisAngleRotation3D(new Vector3D(0,1,0),Settings.Default.KinectAngle),
-                CenterX = 0,
-                CenterY = 0,
-                CenterZ = -10
-            };
-                
-            model.Children.Add(line);
+                C1.Visibility = Visibility.Collapsed;
+                myKinect.ColorStream.Disable();
+            }
+            else
+            {
+                C1.Visibility = Visibility.Visible;
+                myKinect.ColorStream.Enable();
+            }
         }
 
+        private void Expander_Expanded(object sender, RoutedEventArgs e)
+        {
+            if (myKinect != null)
+            {
+                myKinect.ColorStream.Enable();
+                //Enable drawing on each trajectory canvas
+                foreach (Trajectory trajectoryCanvas in trajectories)
+                {
+                    trajectoryCanvas.shouldDraw = true;
+                }
+                //Expand window
+                this.Height = 650;
+            }
+        }
+
+        private void Expander_Collapsed(object sender, RoutedEventArgs e)
+        {
+            myKinect.ColorStream.Disable();
+            
+            //Disable drawing on each trajectory canvas
+            foreach (Trajectory trajectoryCanvas in trajectories)
+            {
+                trajectoryCanvas.shouldDraw = false;
+            }
+
+            //Contract window
+            this.Height = 130;
+        }
+                        
     }
 }

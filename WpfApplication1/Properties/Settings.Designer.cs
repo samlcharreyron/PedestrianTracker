@@ -93,5 +93,17 @@ namespace PedestrianTracker.Properties {
                 this["RenderWidth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3600000")]
+        public double dbTimerSetting {
+            get {
+                return ((double)(this["dbTimerSetting"]));
+            }
+            set {
+                this["dbTimerSetting"] = value;
+            }
+        }
     }
 }
