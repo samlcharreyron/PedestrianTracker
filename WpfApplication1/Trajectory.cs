@@ -206,16 +206,11 @@ namespace PedestrianTracker
                     deltaY = Math.Abs(thisPoint.Y - lastPoint.Y);
                     deltaZ = Math.Abs(thisPoint.Z - lastPoint.Z);
                     
+                    //Euclidean distance along the road axis
                     deltaP = VectorToDistance(thisPoint.X-lastPoint.X,thisPoint.Z-lastPoint.Z);
 
                     Direction = deltaP > 0 ? "R" : "L";
 
-                    //Euclidean distance between the last sampled point and the current point
-                    //deltaDistance = Math.Sqrt(Math.Pow(((double)thisPoint.X - (double)lastPoint.X), 2.0)
-                    //                                    + Math.Pow(((double)thisPoint.Y - (double)lastPoint.Y), 2.0)
-                    //                                    + Math.Pow(((double)thisPoint.Z - (double)lastPoint.Z), 2.0));
-
-                    //horizotal distance is used as delta distance
                     deltaDistance = Math.Abs(deltaP);
 
                     velocity = deltaDistance * (30 / FrameSub);
@@ -444,8 +439,8 @@ namespace PedestrianTracker
                     //TrajectoryTextBrush.Opacity = .5;
 
                     trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity: " + this.velocity.ToString("#.##" + " m/s")  + "\nDirection: " + this.Direction
-                        + "\nDistance: " + this.Distance
-                        +"\ndY: " + deltaY + "  dZ: " + deltaZ,
+                        + "\nDistance: " + this.Distance,
+                        //+"\ndY: " + deltaY + "  dZ: " + deltaZ,
                         //+ "\nX: " + currentSkeleton.Position.X + "  Y: " + currentSkeleton.Position.Y + "   Z: " + currentSkeleton.Position.Z,
                                                 CultureInfo.GetCultureInfo("en-us"),
                                                 FlowDirection.LeftToRight,

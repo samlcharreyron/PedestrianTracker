@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1">
+  <asmv1:assemblyIdentity name="PedestrianTracker.exe" version="1.0.0.2" publicKeyToken="477ec9dd578e6e89" language="neutral" processorArchitecture="x86" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="PedestrianTracker" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+    <commandLine file="PedestrianTracker.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the 
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward 
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Kinect" version="1.5.0.0" publicKeyToken="31BF3856AD364E35" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="System.Data.SqlServerCe" version="3.5.1.0" publicKeyToken="89845DCD8080CC91" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="3DTools.dll" size="73728">
+      <assemblyIdentity name="3DTools" version="1.0.2614.20437" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>MUmPbHuUw4JUgSzu7M8ObEXzTWQ=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PedestrianTracker.exe" size="125952">
+      <assemblyIdentity name="PedestrianTracker" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>IDZFvvR+Q64SZHMjpdXrffoMo6w=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Petzold.Media3D.dll" size="331776">
+      <assemblyIdentity name="Petzold.Media3D" version="0.9.1.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>fDVvwKYER8fzZj9W2O8BrW6Nd40=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="PedestrianTracker.exe.config" size="1826">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>zgtgqNXSA558Z3QxHaIzeXIQ9Ew=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="TrajectoryDb.mdf" size="2359296" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>0JyiLi4bznfT+hor3uUK8i8Ghs4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="TrajectoryDb_log.ldf" size="589824" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>u+0rluUVjg0Y9hKieHLMvrCPDTo=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=Stewart-PC\Stewart" issuerKeyHash="d192e69f7d7d1a78c4f5a95e3e4ac4a84fce9ef1" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>9xBz1fX++QWagQTfLOVxSTP/oZ4=</DigestValue></Reference></SignedInfo><SignatureValue>XqUr6OBk9ljhRf+/VFPJghlesxeijgVIwQdkYmMrIARAnwr0ImQCC7PLltp5AaecEG/npmISfrRNkZBPZZXmWxWZbLZSBTxNAgwUR7nk9UaH2HkWhB7DxDDwoaL9C3X7L/E8KpovLZNlCjI0iKETKYWXToNY3i3eZfPLcnAJk18=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>ouAHWZZH26Y4hRl91WXn2ddf//BB8RheELlZTgdUvmDPTAFvnECaUadZomkCPmdfP20kFaY4EnXYUVfz6wY6koQOs51wUfFqGGew7FaNicl6Xbt9v8OTIFgRd0sBtffkRaGVByzph2QG01g2f4nfu+DIiYfTGbI7Xejc+1kf+f0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="9ea1ff334971e52cdf04819a05f9fef5d57310f7" Description="" Url=""><as:assemblyIdentity name="PedestrianTracker.exe" version="1.0.0.2" publicKeyToken="477ec9dd578e6e89" language="neutral" processorArchitecture="x86" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=Stewart-PC\Stewart</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>vqAHJPNCymJyZarHKosQGUq0HEU=</DigestValue></Reference></SignedInfo><SignatureValue>OPPsyxDwOUmqVPb787RbRwfIvLMSeLvvkWjjcsToOCo1MK7sL4UwHZg75LrL+KBR+7NvPJvJEl8g9jr8cU6UsVOANFsTN0JDo2YSEXTKndNRTl42GR7aRZb5P9pwnA4Em0ortjELpx0XToCMk2gGT3u2e/ltCOlpNKsCXe+GiBU=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>ouAHWZZH26Y4hRl91WXn2ddf//BB8RheELlZTgdUvmDPTAFvnECaUadZomkCPmdfP20kFaY4EnXYUVfz6wY6koQOs51wUfFqGGew7FaNicl6Xbt9v8OTIFgRd0sBtffkRaGVByzph2QG01g2f4nfu+DIiYfTGbI7Xejc+1kf+f0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB4TCCAUqgAwIBAgIQEbKwCHUEMpJFaon8COFjeTANBgkqhkiG9w0BAQUFADAvMS0wKwYDVQQDHiQAUwB0AGUAdwBhAHIAdAAtAFAAQwBcAFMAdABlAHcAYQByAHQwHhcNMTIwNjE4MTY0NDAwWhcNMTMwNjE4MjI0NDAwWjAvMS0wKwYDVQQDHiQAUwB0AGUAdwBhAHIAdAAtAFAAQwBcAFMAdABlAHcAYQByAHQwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAKLgB1mWR9umOIUZfdVl59nXX//wQfEYXhC5WU4HVL5gz0wBb5xAmlGnWaJpAj5nXz9tJBWmOBJ12FFX8+sGOpKEDrOdcFHxahhnsOxWjYnJel27fb/DkyBYEXdLAbX35EWhlQcs6YdkBtNYNn+J37vgyImH0xmyO13o3PtZH/n9AgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAaenyxGayIV8KrpzKE/cRb56B7gozMjiPfna/KoQeGQjdGaRWPifXsiM9UH1f4D5G8fQlm6ENhUbbKNmutTRJq+6xCuhVu/Y2fA0cIMxV+93P9fbFmfn2fp6OxtvTNa71gOcAQEwHbO1KAndZcax+GTWGtkvmTU3IJ7iZHrH3GKo=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

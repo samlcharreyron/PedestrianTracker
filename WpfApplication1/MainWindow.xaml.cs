@@ -20,7 +20,7 @@ using System.Timers;
 using Petzold.Media3D;
 using Microsoft.Kinect;
 using PedestrianTracker.Properties;
-
+using Microsoft.WindowsAPICodePack.ApplicationServices;
 
 //For testing
 using System.Diagnostics;
@@ -76,10 +76,14 @@ namespace PedestrianTracker
         private System.Data.SqlClient.SqlConnection connection;
         public const string connectionString = @"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\TrajectoryDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True";
         private Timer dbTimer;
-        private const double dbTimerSetting = 3600000; 
+        private const double dbTimerSetting = 3600000;
+        private string xmlfilename = "";
 
         //Dataset stuff
         private DataRow lastDataRow;
+
+        //The application's state
+        private string state;
 
         //Dependency Properties
         public static readonly DependencyProperty TotalPlayersProperty =
@@ -146,6 +150,17 @@ namespace PedestrianTracker
             //Add hook for settings events
             Settings.Default.SettingChanging += new System.Configuration.SettingChangingEventHandler(Default_SettingChanging);
 
+            //Restart Management
+            //RecoveryData rd = new RecoveryData(RecoveryCallback, state);
+            //RecoverySettings rs = new RecoverySettings(rd, 1000);
+            //ApplicationRestartRecoveryManager.RegisterForApplicationRecovery(rs);
+            //ApplicationRestartRecoveryManager.RegisterForApplicationRestart(new RestartSettings("restart",RestartRestrictions.None));
+
+            RecoveryHelper.RestartRecoveryHelper<TrajectoryDbDataSet> rrh = new RecoveryHelper.RestartRecoveryHelper<TrajectoryDbDataSet>();
+            rrh.CheckForRestart();
+
+            rrh.RegisterForRestartAndRecovery("PedestrianTracker", "Recover", Globals.ds, 50000, RecoveryHelper.FileType.Xml, RecoveryHelper.RestartRestrictions.None);
+
             loadKinect();
 
         }
@@ -185,7 +200,12 @@ namespace PedestrianTracker
         private void Window_Closed(object sender, EventArgs e)
         {
             updateDatabase();
-            myKinect.Stop();
+            writeToXml();
+
+            if (myKinect != null)
+            {
+                myKinect.Stop();
+            }
         }
 
 
@@ -495,12 +515,6 @@ namespace PedestrianTracker
         {
             int[] result = new int[2];
 
-            //Write to xml file
-            using (StreamWriter xmlSW = new StreamWriter("pedestrianData.xml"))
-            {
-                Globals.ds.WriteXml(xmlSW,XmlWriteMode.WriteSchema);
-            }
-
             using (connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -529,6 +543,24 @@ namespace PedestrianTracker
             }
 
             return result;
+        }
+
+        private void writeToXml()
+        {
+            //Check if there is already a directory for saving trajectory data
+            string xmlfilepath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\Pedestrian Tracker Data";
+
+            if (!Directory.Exists(xmlfilepath))
+            {
+                Directory.CreateDirectory(xmlfilepath);
+            }
+            
+            this.xmlfilename = string.Format("pedestriandata-{0:yyyy-MM-dd_hh-mm-ss}.xml",DateTime.Now);
+
+            using (StreamWriter xmlSW = new StreamWriter(xmlfilepath + "\\" + xmlfilename))
+            {
+                Globals.ds.WriteXml(xmlSW, XmlWriteMode.WriteSchema);
+            }
         }
 
         /// <summary>
@@ -895,6 +927,7 @@ namespace PedestrianTracker
         private void dbTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             updateDatabase();
+            writeToXml();
         }
 
         private void Default_SettingChanging(object sender, System.Configuration.SettingChangingEventArgs e)
@@ -953,6 +986,35 @@ namespace PedestrianTracker
             //Contract window
             this.Height = 130;
         }
-                        
+
+        //Recovery callback method
+        private int RecoveryCallback(object state)
+        {
+            Timer pinger = new Timer(4000);
+            pinger.Elapsed += new ElapsedEventHandler(PingSystem);
+            pinger.Enabled = true;
+
+            System.Threading.Thread.Sleep(9000);
+
+            MessageBox.Show("Recovered");
+
+            ApplicationRestartRecoveryManager.ApplicationRecoveryFinished(true);
+
+            return 0;
+        }
+
+        //Method called to ping the WER that the recovery procedure is in progress
+        private void PingSystem(object source, ElapsedEventArgs e)
+        {
+            Console.WriteLine("Ping");
+            ApplicationRestartRecoveryManager.ApplicationRecoveryInProgress();
+        }
+
+
+        private void mnuCrash_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.FailFast("Uh oh! Looks like a crash");
+        }
+
     }
 }

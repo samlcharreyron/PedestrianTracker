@@ -1,0 +1,48 @@
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\PedestrianTracker.exe.config
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\ResolveAssemblyReference.cache
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\Options.baml
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\Trajectory3DView.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\MainWindow.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\TrajectoryWindow.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\Options.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\App.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker_Content.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker_MarkupCompile.cache
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker_MarkupCompile.lref
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\TrajectoryDb.mdf
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\TrajectoryDb_log.ldf
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\PedestrianTracker.exe.config
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\PedestrianTracker.exe.manifest
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\PedestrianTracker.application
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\PedestrianTracker.exe
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\PedestrianTracker.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\3DTools.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\Petzold.Media3D.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\Microsoft.WindowsAPICodePack.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\Microsoft.WindowsAPICodePack.xml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\3DTools.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\ResolveAssemblyReference.cache
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\Options.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\Trajectory3DView.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\MainWindow.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\TrajectoryWindow.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\Options.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\App.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker_Content.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker_MarkupCompile.cache
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker_MarkupCompile.lref
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\App.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\Trajectory3DView.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\MainWindow.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\TrajectoryWindow.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker.g.resources
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker.Properties.Resources.resources
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\GenerateResource.read.1.tlog
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\GenerateResource.write.1.tlog
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker.exe.manifest
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker.application
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker.exe
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker.pdb

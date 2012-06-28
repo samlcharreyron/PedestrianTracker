@@ -1,0 +1,9 @@
+C:\Users\Stewart\Documents\C#\PedestrianTracker\Core\bin\x64\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\Core\bin\x64\Debug\Microsoft.WindowsAPICodePack.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\Core\bin\x64\Debug\Microsoft.WindowsAPICodePack.XML
+C:\Users\Stewart\Documents\C#\PedestrianTracker\Core\obj\x64\Debug\ResolveAssemblyReference.cache
+C:\Users\Stewart\Documents\C#\PedestrianTracker\Core\obj\x64\Debug\Microsoft.WindowsAPICodePack.Resources.LocalizedMessages.resources
+C:\Users\Stewart\Documents\C#\PedestrianTracker\Core\obj\x64\Debug\ResGen.read.1.tlog
+C:\Users\Stewart\Documents\C#\PedestrianTracker\Core\obj\x64\Debug\ResGen.write.1.tlog
+C:\Users\Stewart\Documents\C#\PedestrianTracker\Core\obj\x64\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\Core\obj\x64\Debug\Microsoft.WindowsAPICodePack.pdb

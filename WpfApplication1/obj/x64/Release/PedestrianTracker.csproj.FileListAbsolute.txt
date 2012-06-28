@@ -1,0 +1,64 @@
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.exe.config
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\TrajectoryDb.mdf
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\TrajectoryDb_log.ldf
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.exe.manifest
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.application
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.exe
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\3DTools.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\Petzold.Media3D.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\3DTools.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\ResolveAssemblyReference.cache
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\Options.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\Trajectory3DView.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\MainWindow.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\TrajectoryWindow.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\Options.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\App.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker_Content.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\GeneratedInternalTypeHelper.g.cs
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker_MarkupCompile.cache
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker_MarkupCompile.lref
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\App.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\Trajectory3DView.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\MainWindow.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\TrajectoryWindow.baml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.g.resources
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.Properties.Resources.resources
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\GenerateResource.read.1.tlog
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\GenerateResource.write.1.tlog
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.exe.manifest
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.application
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.exe
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.pdb
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.exe.config
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.exe
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.pdb
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\TrajectoryDb.mdf
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\TrajectoryDb_log.ldf
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.exe.manifest
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.application
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.exe
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\PedestrianTracker.pdb
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\bin\x64\Release\3DTools.pdb
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\ResolveAssemblyReference.cache
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\Options.baml
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\Trajectory3DView.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\MainWindow.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\TrajectoryWindow.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\Options.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\App.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker_Content.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\GeneratedInternalTypeHelper.g.cs
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker_MarkupCompile.cache
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker_MarkupCompile.lref
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\App.baml
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\Trajectory3DView.baml
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\MainWindow.baml
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\TrajectoryWindow.baml
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.g.resources
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.Properties.Resources.resources
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\GenerateResource.read.1.tlog
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\GenerateResource.write.1.tlog
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.exe.manifest
+C:\Users\Stewart\Documents\Kinect Development\C#\PedestrianTracker\WpfApplication1\obj\x64\Release\PedestrianTracker.application

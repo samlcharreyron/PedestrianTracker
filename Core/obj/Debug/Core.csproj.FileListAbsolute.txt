@@ -1,0 +1,9 @@
+C:\Users\Stewart\Downloads\Windows API Code Pack 1.1\Windows API Code Pack 1.1\source\WindowsAPICodePack\Core\bin\Debug\Microsoft.WindowsAPICodePack.XML
+C:\Users\Stewart\Downloads\Windows API Code Pack 1.1\Windows API Code Pack 1.1\source\WindowsAPICodePack\Core\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Stewart\Downloads\Windows API Code Pack 1.1\Windows API Code Pack 1.1\source\WindowsAPICodePack\Core\bin\Debug\Microsoft.WindowsAPICodePack.pdb
+C:\Users\Stewart\Downloads\Windows API Code Pack 1.1\Windows API Code Pack 1.1\source\WindowsAPICodePack\Core\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Stewart\Downloads\Windows API Code Pack 1.1\Windows API Code Pack 1.1\source\WindowsAPICodePack\Core\obj\Debug\Microsoft.WindowsAPICodePack.Resources.LocalizedMessages.resources
+C:\Users\Stewart\Downloads\Windows API Code Pack 1.1\Windows API Code Pack 1.1\source\WindowsAPICodePack\Core\obj\Debug\ResGen.read.1.tlog
+C:\Users\Stewart\Downloads\Windows API Code Pack 1.1\Windows API Code Pack 1.1\source\WindowsAPICodePack\Core\obj\Debug\ResGen.write.1.tlog
+C:\Users\Stewart\Downloads\Windows API Code Pack 1.1\Windows API Code Pack 1.1\source\WindowsAPICodePack\Core\obj\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Stewart\Downloads\Windows API Code Pack 1.1\Windows API Code Pack 1.1\source\WindowsAPICodePack\Core\obj\Debug\Microsoft.WindowsAPICodePack.pdb

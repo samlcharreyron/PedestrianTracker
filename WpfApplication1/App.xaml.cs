@@ -12,5 +12,10 @@ namespace PedestrianTracker
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            //AppDomain.CurrentDomain.SetData("DataDirectory", Environment.SpecialFolder.ApplicationData);
+            //MessageBox.Show(Environment.SpecialFolder.ApplicationData as string);
+        }
     }
 }
