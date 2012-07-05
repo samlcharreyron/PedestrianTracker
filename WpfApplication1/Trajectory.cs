@@ -92,6 +92,8 @@ namespace PedestrianTracker
         private float deltaP = 0;
         public string Direction = "N";
 
+        private int milliseconds;
+        private int lastmilliseconds;
 
         public double Distance
         {
@@ -103,6 +105,7 @@ namespace PedestrianTracker
         public void Reset()
         {
             this.currentSkeleton = null;
+            this.lastPoint = new SkeletonPoint();
             this.pointList = new List<Point>();
             this.trajectoryPathSegments = null;
             this.trajectoryPathFigure = null;
@@ -112,10 +115,21 @@ namespace PedestrianTracker
             this.velocity = 0.0;
             this.Direction = "NA";
             this.TrackingAngle = Properties.Settings.Default.KinectAngle;
-            this.AngleProjectionFactorX = (float)Math.Cos((TrackingAngle * Math.PI) / 180);
-            this.AngleProjectionFactorZ = (float)Math.Sin((TrackingAngle * Math.PI) / 180);
-            this.FrameSub = Properties.Settings.Default.TrajectorySubsample;
 
+            if (Settings.Default.UseAngle)
+            {
+                this.AngleProjectionFactorX = (float)Math.Cos((TrackingAngle * Math.PI) / 180);
+                this.AngleProjectionFactorZ = (float)Math.Sin((TrackingAngle * Math.PI) / 180);
+            }
+            else
+            {
+                this.AngleProjectionFactorX = 1;
+                this.AngleProjectionFactorZ = 1;
+            }
+
+            this.FrameSub = Properties.Settings.Default.TrajectorySubsample;
+            this.milliseconds = 0;
+            this.lastmilliseconds = 0;
             InvalidateVisual();
         }
 
@@ -185,6 +199,11 @@ namespace PedestrianTracker
             return (X * AngleProjectionFactorX + Z * AngleProjectionFactorZ);
         }
 
+        private float EuclideanDistance(float X, float Z)
+        {
+            return (float) Math.Sqrt(X * X + Z * Z);
+        }
+
         private float[] VectorRotation(float X, float Z)
         {
             return new float[] {X * AngleProjectionFactorX , Z * AngleProjectionFactorZ};
@@ -207,16 +226,20 @@ namespace PedestrianTracker
                     deltaZ = Math.Abs(thisPoint.Z - lastPoint.Z);
                     
                     //Euclidean distance along the road axis
-                    deltaP = VectorToDistance(thisPoint.X-lastPoint.X,thisPoint.Z-lastPoint.Z);
+                    deltaP = EuclideanDistance(thisPoint.X-lastPoint.X,thisPoint.Z-lastPoint.Z);
 
                     Direction = deltaP > 0 ? "R" : "L";
 
                     deltaDistance = Math.Abs(deltaP);
+                    
+                    //Time since trajectory started
+                    milliseconds = (int)DateTime.Now.Subtract(startTime).TotalMilliseconds;
 
-                    velocity = deltaDistance * (30 / FrameSub);
+                    //velocity = deltaDistance * (30 / FrameSub);
+                    velocity = deltaDistance * 1000 / (milliseconds - lastmilliseconds);
 
                     //filters out erroneous data
-                    if (deltaDistance > MinDeltaDistance && velocity < MaxVelocity)
+                    if (deltaDistance > MinDeltaDistance)
                     {
                         Distance += deltaDistance;
 
@@ -227,7 +250,7 @@ namespace PedestrianTracker
                         }
 
                         //Adds a point to the Point dataset
-                        addPointData(thisPoint, Distance, deltaDistance, velocity, Direction, t_key);
+                        addPointData(thisPoint, Distance, deltaDistance, velocity, Direction, t_key,milliseconds);
 
                     }
 
@@ -235,6 +258,7 @@ namespace PedestrianTracker
 
                 //stores the point for the next calculation
                 lastPoint = thisPoint;
+                lastmilliseconds = milliseconds;
             }
 
             else frameIteration++;
@@ -291,7 +315,7 @@ namespace PedestrianTracker
             }
             
             //if only one point do not calculate the distance
-            if (pointList.Count > 1)
+            if (pointList.Count > 0)
             {
                 IncrementDistance(currentSkeleton.Position);
             }
@@ -330,11 +354,10 @@ namespace PedestrianTracker
         }
 
         // Add one point to points table, must refer to a trajectory in trajectories table
-        public void addPointData(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction, TrajectoryDbDataSet.trajectoriesRow t_key)
+        public void addPointData(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction, TrajectoryDbDataSet.trajectoriesRow t_key,int milliseconds)
         {
             try
             {
-                int milliseconds = (int)DateTime.Now.Subtract(startTime).TotalMilliseconds;
                 Globals.ds.points.AddpointsRow(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction, (byte) trackedSkeleton, t_key,milliseconds);
             }
             catch
@@ -374,7 +397,7 @@ namespace PedestrianTracker
                 TrajectoryDbDataSet.trajectoriesRow currentRow = Globals.ds.trajectories.FindByt_id(this.t_id);
                 
                 //update row with final values
-                currentRow.end_time = DateTime.Now;
+                //currentRow.end_time = DateTime.Now;
 
                 //Average velocity and direction
                 double velocitySum = 0;
@@ -382,13 +405,20 @@ namespace PedestrianTracker
                 int rows = 0;
                 List<double> velocities = new List<double>();
 
-                foreach (DataRow row in Globals.ds.points.Select(String.Format("t_id = {0}", t_id)))
+                TrajectoryDbDataSet.pointsRow[] pointrows =  Globals.ds.points.Select(String.Format("t_id = {0}", t_id)) as TrajectoryDbDataSet.pointsRow[];
+
+                foreach (TrajectoryDbDataSet.pointsRow row in pointrows)
                 {
                     velocities.Add((double)row[5]);
                     //velocitySum += (double)row[5];
                     directionSum += Direction.Equals("R") ? 1 : 0;
                     
                     rows++;
+
+                    if (rows == pointrows.Count())
+                    {
+                        currentRow.end_time = currentRow.start_time.AddMilliseconds(row.milliseconds);
+                    }
                 }
 
 
@@ -407,8 +437,10 @@ namespace PedestrianTracker
                         n++;
                     }
                 }
+                
+                double tester = velocitySum/n;
 
-                currentRow.average_velocity = velocitySum/n;
+                currentRow.average_velocity = (tester.CompareTo(double.NaN)>0) ? tester: mean;
                 currentRow.average_direction = (directionSum/rows > 0.5) ? "R" : "L";
                 currentRow.length = this.Distance;
 

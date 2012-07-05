@@ -26,7 +26,16 @@
       <Value Profile="(Default)">640</Value>
     </Setting>
     <Setting Name="dbTimerSetting" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">300000</Value>
+    </Setting>
+    <Setting Name="Logging" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="xmlTimerSetting" Type="System.Double" Scope="User">
       <Value Profile="(Default)">3600000</Value>
+    </Setting>
+    <Setting Name="UseAngle" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

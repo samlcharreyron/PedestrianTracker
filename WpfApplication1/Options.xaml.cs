@@ -54,6 +54,16 @@ namespace PedestrianTracker
         {
             TrySetAngle((int)e.NewValue);
         }
+
+        private void LoggingCb_Checked(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.Logging = true;
+        }
+
+        private void LoggingCb_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.Logging = false;
+        }
  
     }
 }

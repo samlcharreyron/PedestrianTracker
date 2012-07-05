@@ -1,4 +1,5 @@
-﻿namespace PedestrianTracker {
+﻿namespace Trajectory_Viewer
+{
     
     
     public partial class TrajectoryDbDataSet {
@@ -12,12 +13,15 @@
     }
 }
 
-namespace PedestrianTracker.TrajectoryDbDataSetTableAdapters {
+namespace Trajectory_Viewer.TrajectoryDbDataSetTableAdapters
+{
+    partial class pointsTableAdapter
+    {
+    }
+
     partial class trajectoriesTableAdapter
     {
     }
-    
-    
-    public partial class Trajectory1TableAdapter {
-    }
+        
+
 }

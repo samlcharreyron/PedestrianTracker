@@ -12,6 +12,8 @@
             <RowDefinition />
             <RowDefinition Height="Auto"/>
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -30,5 +32,9 @@
         </StackPanel>
         <Label FontWeight="Bold" Grid.Column="0" Grid.Row="3">Milliseconds between database updates</Label>
         <TextBox Grid.Column="1" Grid.Row="3" Height ="20" Width="60" VerticalAlignment="Top"  Text="{Binding Source={StaticResource Settings}, Path=Default.dbTimerSetting}" />
+        <Label FontWeight="Bold" Grid.Column="0" Grid.Row="4">Milliseconds between xml file writes</Label>
+        <TextBox Grid.Column="1" Grid.Row="4" Height ="20" Width="60" VerticalAlignment="Top"  Text="{Binding Source={StaticResource Settings}, Path=Default.xmlTimerSetting}" />
+        <Label FontWeight="Bold" Grid.Row="5">Logging Enabled</Label>
+        <CheckBox x:Name="LoggingCb" Grid.Row="5" Grid.Column="1" Checked="LoggingCb_Checked" Unchecked="LoggingCb_Unchecked" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

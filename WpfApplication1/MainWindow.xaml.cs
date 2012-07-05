@@ -33,7 +33,7 @@ namespace PedestrianTracker
     /// 
 
 
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public static KinectSensor myKinect;
         private string errorMessage;
@@ -76,14 +76,35 @@ namespace PedestrianTracker
         private System.Data.SqlClient.SqlConnection connection;
         public const string connectionString = @"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\TrajectoryDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True";
         private Timer dbTimer;
-        private const double dbTimerSetting = 3600000;
+        private Timer xmlTimer;
+        private const double dbTimerSetting = 300000;
         private string xmlfilename = "";
 
         //Dataset stuff
         private DataRow lastDataRow;
 
-        //The application's state
-        private string state;
+
+        //For framerate
+        protected int TotalFrames{ get; set; }
+        protected int LastFrames { get; set; }
+        private DateTime lastTime = DateTime.MaxValue;
+        private int frameRate;
+
+        public int FrameRate
+        {
+            get
+            {
+                return this.frameRate;
+            }
+            set
+            {
+                if (this.frameRate != value)
+                {
+                    this.frameRate = value;
+                    this.NotifyPropertyChanged("FrameRate");
+                }
+            }
+        }
 
         //Dependency Properties
         public static readonly DependencyProperty TotalPlayersProperty =
@@ -122,6 +143,8 @@ namespace PedestrianTracker
             set { SetValue(SkeletonYProperty, value); }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -142,27 +165,37 @@ namespace PedestrianTracker
             //Default to open visualiser
             Expander.IsExpanded = true;
 
-            //Start the db timer to update every hour
-            dbTimer = new Timer(dbTimerSetting);
+            //Start the db timer to update according to the time interval setting
+            dbTimer = new Timer(Settings.Default.dbTimerSetting);
             dbTimer.Elapsed += new ElapsedEventHandler(dbTimer_Elapsed);
             dbTimer.Start();
+
+            //Start the xml timer to update to the time interval setting
+            xmlTimer = new Timer(Settings.Default.xmlTimerSetting);
+            xmlTimer.Elapsed += new ElapsedEventHandler(xmlTimer_Elapsed);
+            xmlTimer.Start();
 
             //Add hook for settings events
             Settings.Default.SettingChanging += new System.Configuration.SettingChangingEventHandler(Default_SettingChanging);
 
-            //Restart Management
-            //RecoveryData rd = new RecoveryData(RecoveryCallback, state);
-            //RecoverySettings rs = new RecoverySettings(rd, 1000);
-            //ApplicationRestartRecoveryManager.RegisterForApplicationRecovery(rs);
-            //ApplicationRestartRecoveryManager.RegisterForApplicationRestart(new RestartSettings("restart",RestartRestrictions.None));
+            ////Restart Management
+            ////RecoveryData rd = new RecoveryData(RecoveryCallback, state);
+            ////RecoverySettings rs = new RecoverySettings(rd, 1000);
+            ////ApplicationRestartRecoveryManager.RegisterForApplicationRecovery(rs);
+            ////ApplicationRestartRecoveryManager.RegisterForApplicationRestart(new RestartSettings("restart",RestartRestrictions.None));
 
             RecoveryHelper.RestartRecoveryHelper<TrajectoryDbDataSet> rrh = new RecoveryHelper.RestartRecoveryHelper<TrajectoryDbDataSet>();
             rrh.CheckForRestart();
+            //MessageBox.Show(ds1.trajectories.Count.ToString());
+
+            //Globals.ds = ds1;
 
             rrh.RegisterForRestartAndRecovery("PedestrianTracker", "Recover", Globals.ds, 50000, RecoveryHelper.FileType.Xml, RecoveryHelper.RestartRestrictions.None);
+            
+            //Start logging
+            Globals.Log("Starting Log");
 
             loadKinect();
-
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -214,7 +247,7 @@ namespace PedestrianTracker
         {
             if (KinectSensor.KinectSensors.Count == 0)
             {
-                errorMessage += "No Kinects detected ";
+                //errorMessage += "No Kinects detected ";
                 return false;
             }
 
@@ -224,17 +257,19 @@ namespace PedestrianTracker
             try
             {
                 myKinect.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
-                //myKinect.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
                 myKinect.SkeletonStream.Enable();
             }
 
             catch
             {
-                errorMessage += "Unable to enable sensor streams ";
+                return false;
+                //errorMessage += "Unable to enable sensor streams ";
             }
 
             //Add event handler for streams
-            myKinect.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(myKinect_AllFramesReady);
+            //myKinect.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(myKinect_AllFramesReady);
+            myKinect.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(myKinect_ColorFrameReady);
+            myKinect.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(myKinect_SkeletonFrameReady);
 
             try
             {
@@ -242,39 +277,21 @@ namespace PedestrianTracker
             }
             catch
             {
-                errorMessage += "Unable to start Kinect ";
+                return false;
+                //errorMessage += "Unable to start Kinect ";
             }
 
-            if (errorMessage.Length > 0)
-            {
-                //errorBox.Text = errorMessage;
-            }
+            //if (errorMessage.Length > 0)
+            //{
+            //    //errorBox.Text = errorMessage;
+            //}
 
             return true;
 
         }
 
-        void myKinect_AllFramesReady(object sender, AllFramesReadyEventArgs e)
+        void myKinect_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
         {
-            //using (DepthImageFrame depthFrame = e.OpenDepthImageFrame())
-            //{
-            //    //Make sure that the depthFrame if empty
-            //    if (depthFrame == null)
-            //    {
-            //        return;
-            //    }
-
-            //    byte[] pixels = GenerateColoredBytes(depthFrame);
-
-            //    //number of bytes per row width * 4 (B,G,R,Empty)
-            //    int stride = depthFrame.Width * 4;
-
-            //    //create image
-            //    image1.Source =
-            //        BitmapSource.Create(depthFrame.Width, depthFrame.Height,
-            //        96, 96, PixelFormats.Bgr32, null, pixels, stride);
-            //}
-
             if (myKinect.ColorStream.IsEnabled)
             {
                 using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
@@ -293,9 +310,10 @@ namespace PedestrianTracker
                         96, 96, PixelFormats.Bgr32, null, pixels, stride);
                 }
             }
+        }
 
-
-
+        void myKinect_SkeletonFrameReady(object sencer, SkeletonFrameReadyEventArgs e)
+        {
             using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
             {
 
@@ -382,7 +400,122 @@ namespace PedestrianTracker
 
                 }
             }
+
+            UpdateFrameRate();
         }
+
+
+        //void myKinect_AllFramesReady(object sender, AllFramesReadyEventArgs e)
+        //{
+
+        //    if (myKinect.ColorStream.IsEnabled)
+        //    {
+        //        using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+        //        {
+        //            if (colorFrame == null)
+        //            {
+        //                return;
+        //            }
+
+        //            byte[] pixels = new byte[colorFrame.PixelDataLength];
+        //            colorFrame.CopyPixelDataTo(pixels);
+
+        //            int stride = colorFrame.Width * 4;
+        //            image1.Source =
+        //                BitmapSource.Create(colorFrame.Width, colorFrame.Height,
+        //                96, 96, PixelFormats.Bgr32, null, pixels, stride);
+        //        }
+        //    }
+
+
+
+        //    using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
+        //    {
+
+        //        //Make sure skeleton frame is not empty
+        //        if (skeletonFrame == null)
+        //        {
+        //            return;
+        //        }
+
+        //        //Create Trajectory Canvases
+
+        //        if (trajectories == null)
+        //        {
+        //            this.CreateTrajectoryCanvases();
+        //        }
+
+        //        //Copy skeleton data
+        //        try
+        //        {
+        //            skeletonFrame.CopySkeletonDataTo(skeletons);
+        //        }
+
+        //        catch
+        //        {
+        //            errorMessage += "Unable to copy over skeleton data";
+        //        }
+
+        //        //Retrieve floor clipping plane parameters
+        //        this.A = skeletonFrame.FloorClipPlane.Item1;
+        //        this.B = skeletonFrame.FloorClipPlane.Item2;
+        //        this.C = skeletonFrame.FloorClipPlane.Item3;
+        //        this.D = skeletonFrame.FloorClipPlane.Item4;
+
+        //        //Make sure counter starts from 0 every frame
+        //        TotalPlayers = 0;
+
+        //        int trackedSkeleton = 0;
+
+        //        ////Make retarded transparent brush so that you can paint on it
+        //        //Brush TransparentBrush = new SolidColorBrush();
+        //        //TransparentBrush.Opacity = 0;
+        //        //dc.DrawRectangle(TransparentBrush, null, new Rect(0, 0, RenderWidth, RenderHeight));
+
+        //        if (skeletons.Length != 0)
+        //        {
+        //            foreach (Skeleton s in skeletons)
+        //            {
+        //                this.trajectoryCanvas = trajectories[trackedSkeleton++];
+
+        //                if (s.TrackingState != SkeletonTrackingState.NotTracked)
+        //                {
+
+        //                    //If has been tracking for too long 
+        //                    //if (trajectoryCanvas.pointList.Count > 100)
+        //                    //{
+        //                    //    s.TrackingState = SkeletonTrackingState.NotTracked;
+        //                    //    trajectoryCanvas.Reset();
+        //                    //    continue;
+        //                    //}
+
+        //                    //set tracking state to Position Only and increment player count
+        //                    s.TrackingState = SkeletonTrackingState.PositionOnly;
+        //                    TotalPlayers++;
+
+        //                    trajectoryCanvas.RefreshTrajectory(s, SkeletonPointToScreen(s.Position), trackedSkeleton);
+
+        //                }
+
+        //                //Either not tracking yet or leaving tracking state
+        //                else
+        //                {
+        //                    //Minimum distance threshold to count those that have been tracked long enough
+        //                    if (trajectoryCanvas.Distance > DistanceThreshold)
+        //                    {
+        //                        PedestrianCounts++;
+
+        //                        trajectoryCanvas.updateTrajectory();
+        //                        //Debug.WriteLine("number of rows added: " + trajectoryCanvas.updateDatabase());
+        //                    }
+
+        //                    trajectoryCanvas.Reset();
+        //                }
+        //            }
+
+        //        }
+        //    }
+        //}
 
         private byte[] GenerateColoredBytes(DepthImageFrame depthFrame)
         {
@@ -683,6 +816,23 @@ namespace PedestrianTracker
 
             model.Children.Add(line);
         }
+
+        protected void UpdateFrameRate()
+        {
+
+                ++this.TotalFrames;
+
+                DateTime cur = DateTime.Now;
+                var span = cur.Subtract(this.lastTime);
+                if (this.lastTime == DateTime.MaxValue || span >= TimeSpan.FromSeconds(1))
+                {
+                    // A straight cast will truncate the value, leading to chronic under-reporting of framerate.
+                    // rounding yields a more balanced result
+                    this.FrameRate = (int)Math.Round((this.TotalFrames - this.LastFrames) / span.TotalSeconds);
+                    this.LastFrames = this.TotalFrames;
+                    this.lastTime = cur;
+                }
+        }
         /// <summary>
         /// Menu event handlers
         /// </summary>
@@ -923,11 +1073,19 @@ namespace PedestrianTracker
             traj3d.Show();
         }
 
-        //When the database timer reaches one hour, update the datasource
+        //When the database timer ends, update the datasource
         private void dbTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            Globals.Log("Updating database");
             updateDatabase();
+            
+        }
+
+        private void xmlTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Globals.Log("Writing an xml file");
             writeToXml();
+
         }
 
         private void Default_SettingChanging(object sender, System.Configuration.SettingChangingEventArgs e)
@@ -994,9 +1152,9 @@ namespace PedestrianTracker
             pinger.Elapsed += new ElapsedEventHandler(PingSystem);
             pinger.Enabled = true;
 
-            System.Threading.Thread.Sleep(9000);
+            writeToXml();
 
-            MessageBox.Show("Recovered");
+            //MessageBox.Show("Recovered");
 
             ApplicationRestartRecoveryManager.ApplicationRecoveryFinished(true);
 
@@ -1013,8 +1171,15 @@ namespace PedestrianTracker
 
         private void mnuCrash_Click(object sender, RoutedEventArgs e)
         {
-            Environment.FailFast("Uh oh! Looks like a crash");
+            //Environment.FailFast("Uh oh! Looks like a crash");
         }
 
+        protected void NotifyPropertyChanged(string info)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(info));
+            }
+        }
     }
 }

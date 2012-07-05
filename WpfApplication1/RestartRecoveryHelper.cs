@@ -91,7 +91,8 @@ namespace PedestrianTracker.RecoveryHelper
                     subject = (T)serializer.Deserialize(fs);
                     fs.Close();
                     //LogToFile("found xml. \r\n" + subject.ToString() + "\r\n");
-                    File.Delete(RecoveryPath);
+                    //File.Delete(RecoveryPath);
+        
                     return subject;
                 }
                 if (RecoveryPath.EndsWith(".bin"))
@@ -218,11 +219,16 @@ namespace PedestrianTracker.RecoveryHelper
             //LogToFile("writing to " + RecoveryPath + "\r\n");
             if (RecoveryPath.EndsWith(".xml"))
             {
+                //using (Stream createFile = File.OpenWrite(RecoveryPath))
+                //{
+                //    XmlSerializer ser = new XmlSerializer(document.GetType());
+                //    ser.Serialize(createFile, document);
+                //    //LogToFile("wrote xml\r\n");
+                //}
+
                 using (Stream createFile = File.OpenWrite(RecoveryPath))
                 {
-                    XmlSerializer ser = new XmlSerializer(document.GetType());
-                    ser.Serialize(createFile, document);
-                    //LogToFile("wrote xml\r\n");
+                    Globals.ds.WriteXml(createFile,System.Data.XmlWriteMode.WriteSchema);
                 }
             }
             else

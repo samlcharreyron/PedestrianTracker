@@ -466,7 +466,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Pedestrian Tracker"
         "ProductCode" = "8:{A2DBE2BB-297A-4A83-81B6-50AEA4D042F9}"
-        "PackageCode" = "8:{1DFD5214-1B11-47FD-9D01-4C099FA93C7A}"
+        "PackageCode" = "8:{20CA496D-8A7F-47AB-89CD-3226DD2A9A26}"
         "UpgradeCode" = "8:{9062F1BA-C1FA-4A08-AA78-D3D7AC9BE483}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

@@ -96,13 +96,49 @@ namespace PedestrianTracker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3600000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("300000")]
         public double dbTimerSetting {
             get {
                 return ((double)(this["dbTimerSetting"]));
             }
             set {
                 this["dbTimerSetting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Logging {
+            get {
+                return ((bool)(this["Logging"]));
+            }
+            set {
+                this["Logging"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3600000")]
+        public double xmlTimerSetting {
+            get {
+                return ((double)(this["xmlTimerSetting"]));
+            }
+            set {
+                this["xmlTimerSetting"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseAngle {
+            get {
+                return ((bool)(this["UseAngle"]));
+            }
+            set {
+                this["UseAngle"] = value;
             }
         }
     }

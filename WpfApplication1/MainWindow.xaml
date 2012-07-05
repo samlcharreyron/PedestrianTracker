@@ -49,7 +49,7 @@
                 </MenuItem>
                 <MenuItem Header="_Tools">
                     <MenuItem Header="Options" Click="mnuViewOptions_Clicked" />
-                    <MenuItem Header="Crash" Click="mnuCrash_Click" />
+                    <!--MenuItem Header="Crash" Click="mnuCrash_Click" /-->
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -99,9 +99,13 @@
                 <TextBlock Text="   Pedestrian Counts: "  FontSize="20"/>
                 <TextBlock Name="PedestrianCountsDisplay" Text="{Binding Path=PedestrianCounts}" FontSize="20" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Column="2">
+            <!--StackPanel Orientation="Horizontal" Grid.Column="2">
                 <TextBlock Text="   Tracking Angle: "  FontSize="20"/>
                 <TextBlock Name="TrackingAngleDisplay" Text="{Binding Source={StaticResource Settings}, Path=Default.KinectAngle }" FontSize="20" />
+            </StackPanel-->
+            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <TextBlock Text="   Frame Rate: "  FontSize="20"/>
+                <TextBlock Name="FrameRateDisplay" Text="{Binding Path=FrameRate}" FontSize="20" />
             </StackPanel>
             <TextBlock Name="errorBox" Grid.Column="1" FontSize="20" Foreground="Red" />
         </Grid>
