@@ -31,3 +31,16 @@ C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\Pedest
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\PedestrianTracker.application
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker.exe.manifest
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x86\Debug\PedestrianTracker.application
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.Video.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.Video.VFW.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\Microsoft.WindowsAPICodePack.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.Video.xml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.Video.VFW.xml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.xml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.Video.FFMPEG.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\Microsoft.WindowsAPICodePack.xml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.Video.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\Debug\AForge.Video.VFW.pdb

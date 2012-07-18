@@ -15,12 +15,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
 using System.Windows.Media.Media3D;
+using System.Threading;
 using System.Timers;
 using Petzold.Media3D;
 using Microsoft.Kinect;
 using PedestrianTracker.Properties;
-using Microsoft.WindowsAPICodePack.ApplicationServices;
+//using Microsoft.WindowsAPICodePack.ApplicationServices;
+using AForge.Video;
+//using AForge.Video.FFMPEG;
+using AForge.Video.VFW;
+
+
+
 
 //For testing
 using System.Diagnostics;
@@ -75,8 +83,8 @@ namespace PedestrianTracker
         //Database stuff
         private System.Data.SqlClient.SqlConnection connection;
         public const string connectionString = @"Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\TrajectoryDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True";
-        private Timer dbTimer;
-        private Timer xmlTimer;
+        private System.Timers.Timer dbTimer;
+        private System.Timers.Timer xmlTimer;
         private const double dbTimerSetting = 300000;
         private string xmlfilename = "";
 
@@ -105,6 +113,12 @@ namespace PedestrianTracker
                 }
             }
         }
+
+        //For saving video
+        private bool isRecordingVideo = false;
+        private string videoFileName;
+        private AVIWriter aviWriter;
+        private object aviWatchDog = new object();
 
         //Dependency Properties
         public static readonly DependencyProperty TotalPlayersProperty =
@@ -166,12 +180,12 @@ namespace PedestrianTracker
             Expander.IsExpanded = true;
 
             //Start the db timer to update according to the time interval setting
-            dbTimer = new Timer(Settings.Default.dbTimerSetting);
+            dbTimer = new System.Timers.Timer(Settings.Default.dbTimerSetting);
             dbTimer.Elapsed += new ElapsedEventHandler(dbTimer_Elapsed);
             dbTimer.Start();
 
             //Start the xml timer to update to the time interval setting
-            xmlTimer = new Timer(Settings.Default.xmlTimerSetting);
+            xmlTimer = new System.Timers.Timer(Settings.Default.xmlTimerSetting);
             xmlTimer.Elapsed += new ElapsedEventHandler(xmlTimer_Elapsed);
             xmlTimer.Start();
 
@@ -184,13 +198,13 @@ namespace PedestrianTracker
             ////ApplicationRestartRecoveryManager.RegisterForApplicationRecovery(rs);
             ////ApplicationRestartRecoveryManager.RegisterForApplicationRestart(new RestartSettings("restart",RestartRestrictions.None));
 
-            RecoveryHelper.RestartRecoveryHelper<TrajectoryDbDataSet> rrh = new RecoveryHelper.RestartRecoveryHelper<TrajectoryDbDataSet>();
-            rrh.CheckForRestart();
-            //MessageBox.Show(ds1.trajectories.Count.ToString());
+            //RecoveryHelper.RestartRecoveryHelper<TrajectoryDbDataSet> rrh = new RecoveryHelper.RestartRecoveryHelper<TrajectoryDbDataSet>();
+            //rrh.CheckForRestart();
+            ////MessageBox.Show(ds1.trajectories.Count.ToString());
 
-            //Globals.ds = ds1;
+            ////Globals.ds = ds1;
 
-            rrh.RegisterForRestartAndRecovery("PedestrianTracker", "Recover", Globals.ds, 50000, RecoveryHelper.FileType.Xml, RecoveryHelper.RestartRestrictions.None);
+            //rrh.RegisterForRestartAndRecovery("PedestrianTracker", "Recover", Globals.ds, 50000, RecoveryHelper.FileType.Xml, RecoveryHelper.RestartRestrictions.None);
             
             //Start logging
             Globals.Log("Starting Log");
@@ -305,9 +319,26 @@ namespace PedestrianTracker
                     colorFrame.CopyPixelDataTo(pixels);
 
                     int stride = colorFrame.Width * 4;
-                    image1.Source =
-                        BitmapSource.Create(colorFrame.Width, colorFrame.Height,
+
+
+                    BitmapSource bmpSource = BitmapSource.Create(colorFrame.Width, colorFrame.Height,
                         96, 96, PixelFormats.Bgr32, null, pixels, stride);
+
+                    image1.Source = bmpSource;
+
+                    if (isRecordingVideo)
+                    {
+                        System.Drawing.Bitmap bmp = GetBitmap(bmpSource);
+
+                        //System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(640, 480);
+
+                        lock (aviWatchDog)
+                        {
+                            //aviWriter.AddFrame(bmp);
+                        }
+                    
+                    }
+
                 }
             }
         }
@@ -403,119 +434,6 @@ namespace PedestrianTracker
 
             UpdateFrameRate();
         }
-
-
-        //void myKinect_AllFramesReady(object sender, AllFramesReadyEventArgs e)
-        //{
-
-        //    if (myKinect.ColorStream.IsEnabled)
-        //    {
-        //        using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
-        //        {
-        //            if (colorFrame == null)
-        //            {
-        //                return;
-        //            }
-
-        //            byte[] pixels = new byte[colorFrame.PixelDataLength];
-        //            colorFrame.CopyPixelDataTo(pixels);
-
-        //            int stride = colorFrame.Width * 4;
-        //            image1.Source =
-        //                BitmapSource.Create(colorFrame.Width, colorFrame.Height,
-        //                96, 96, PixelFormats.Bgr32, null, pixels, stride);
-        //        }
-        //    }
-
-
-
-        //    using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
-        //    {
-
-        //        //Make sure skeleton frame is not empty
-        //        if (skeletonFrame == null)
-        //        {
-        //            return;
-        //        }
-
-        //        //Create Trajectory Canvases
-
-        //        if (trajectories == null)
-        //        {
-        //            this.CreateTrajectoryCanvases();
-        //        }
-
-        //        //Copy skeleton data
-        //        try
-        //        {
-        //            skeletonFrame.CopySkeletonDataTo(skeletons);
-        //        }
-
-        //        catch
-        //        {
-        //            errorMessage += "Unable to copy over skeleton data";
-        //        }
-
-        //        //Retrieve floor clipping plane parameters
-        //        this.A = skeletonFrame.FloorClipPlane.Item1;
-        //        this.B = skeletonFrame.FloorClipPlane.Item2;
-        //        this.C = skeletonFrame.FloorClipPlane.Item3;
-        //        this.D = skeletonFrame.FloorClipPlane.Item4;
-
-        //        //Make sure counter starts from 0 every frame
-        //        TotalPlayers = 0;
-
-        //        int trackedSkeleton = 0;
-
-        //        ////Make retarded transparent brush so that you can paint on it
-        //        //Brush TransparentBrush = new SolidColorBrush();
-        //        //TransparentBrush.Opacity = 0;
-        //        //dc.DrawRectangle(TransparentBrush, null, new Rect(0, 0, RenderWidth, RenderHeight));
-
-        //        if (skeletons.Length != 0)
-        //        {
-        //            foreach (Skeleton s in skeletons)
-        //            {
-        //                this.trajectoryCanvas = trajectories[trackedSkeleton++];
-
-        //                if (s.TrackingState != SkeletonTrackingState.NotTracked)
-        //                {
-
-        //                    //If has been tracking for too long 
-        //                    //if (trajectoryCanvas.pointList.Count > 100)
-        //                    //{
-        //                    //    s.TrackingState = SkeletonTrackingState.NotTracked;
-        //                    //    trajectoryCanvas.Reset();
-        //                    //    continue;
-        //                    //}
-
-        //                    //set tracking state to Position Only and increment player count
-        //                    s.TrackingState = SkeletonTrackingState.PositionOnly;
-        //                    TotalPlayers++;
-
-        //                    trajectoryCanvas.RefreshTrajectory(s, SkeletonPointToScreen(s.Position), trackedSkeleton);
-
-        //                }
-
-        //                //Either not tracking yet or leaving tracking state
-        //                else
-        //                {
-        //                    //Minimum distance threshold to count those that have been tracked long enough
-        //                    if (trajectoryCanvas.Distance > DistanceThreshold)
-        //                    {
-        //                        PedestrianCounts++;
-
-        //                        trajectoryCanvas.updateTrajectory();
-        //                        //Debug.WriteLine("number of rows added: " + trajectoryCanvas.updateDatabase());
-        //                    }
-
-        //                    trajectoryCanvas.Reset();
-        //                }
-        //            }
-
-        //        }
-        //    }
-        //}
 
         private byte[] GenerateColoredBytes(DepthImageFrame depthFrame)
         {
@@ -658,7 +576,14 @@ namespace PedestrianTracker
 
                     if (Globals.ds != null)
                     {
-                        result[0] = trajectoriesDa.Update(Globals.ds);
+                        try
+                        {
+                            result[0] = trajectoriesDa.Update(Globals.ds);
+                        }
+                        catch (Exception e)
+                        {
+                            return new int[] {0,0};
+                        }
                     }
 
                     using (TrajectoryDbDataSetTableAdapters.pointsTableAdapter pointsDa = new TrajectoryDbDataSetTableAdapters.pointsTableAdapter())
@@ -666,8 +591,15 @@ namespace PedestrianTracker
 
                         if (Globals.ds != null)
                         {
+                            try
+                            {
 
-                            result[1] = pointsDa.Update(Globals.ds);
+                                result[1] = pointsDa.Update(Globals.ds);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                            }
 
                         }
                     }
@@ -1148,7 +1080,7 @@ namespace PedestrianTracker
         //Recovery callback method
         private int RecoveryCallback(object state)
         {
-            Timer pinger = new Timer(4000);
+            System.Timers.Timer pinger = new System.Timers.Timer(4000);
             pinger.Elapsed += new ElapsedEventHandler(PingSystem);
             pinger.Enabled = true;
 
@@ -1156,7 +1088,7 @@ namespace PedestrianTracker
 
             //MessageBox.Show("Recovered");
 
-            ApplicationRestartRecoveryManager.ApplicationRecoveryFinished(true);
+            //ApplicationRestartRecoveryManager.ApplicationRecoveryFinished(true);
 
             return 0;
         }
@@ -1165,13 +1097,64 @@ namespace PedestrianTracker
         private void PingSystem(object source, ElapsedEventArgs e)
         {
             Console.WriteLine("Ping");
-            ApplicationRestartRecoveryManager.ApplicationRecoveryInProgress();
+            //ApplicationRestartRecoveryManager.ApplicationRecoveryInProgress();
         }
 
 
         private void mnuCrash_Click(object sender, RoutedEventArgs e)
         {
+            throw new NotImplementedException();
             //Environment.FailFast("Uh oh! Looks like a crash");
+        }
+
+        private void mnuFileSaveVideo_Click(object sender, RoutedEventArgs e)
+        {
+            //throw new NotImplementedException();
+
+            if (!isRecordingVideo)
+            {
+                ShowVideoSaveDialog();
+            }
+            else
+            {
+                MessageBoxResult result1 = MessageBox.Show("Video capture already in progress. Cancel existing capture?", "", MessageBoxButton.YesNoCancel);
+
+                if (result1 == MessageBoxResult.Yes)
+                {
+                    //Cancel existing capture
+                    isRecordingVideo = false;
+                    aviWriter.Close();
+
+                    MessageBoxResult result2 = MessageBox.Show("Save capture to new file?", "", MessageBoxButton.YesNo);
+
+                    if (result2 == MessageBoxResult.Yes)
+                    {
+                        ShowVideoSaveDialog();
+                    }
+                }
+            }
+        }
+
+        private void ShowVideoSaveDialog()
+        {
+            Microsoft.Win32.SaveFileDialog saveVideoDialog = new Microsoft.Win32.SaveFileDialog();
+            saveVideoDialog.Title = "Save RGB Video file";
+            saveVideoDialog.DefaultExt = ".avi";
+            saveVideoDialog.Filter = "AVI files (*.avi)|*.txt|All files (*.*)|*.*";
+            saveVideoDialog.FileName = string.Format("pedtracvideo-{0:yyyy-MM-dd_hh-mm-ss}.avi",DateTime.Now);
+
+            Nullable<bool> result = saveVideoDialog.ShowDialog();
+            if (result == true)
+            {
+                this.videoFileName = saveVideoDialog.FileName;
+                aviWriter = new AVIWriter()
+                {
+                    FrameRate = 30
+                };
+
+                aviWriter.Open(videoFileName, 640, 480);
+                isRecordingVideo = true;
+            }
         }
 
         protected void NotifyPropertyChanged(string info)
@@ -1180,6 +1163,25 @@ namespace PedestrianTracker
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(info));
             }
+        }
+
+        private System.Drawing.Bitmap GetBitmap(BitmapSource source)
+        {
+            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(
+              source.PixelWidth,
+              source.PixelHeight,
+              System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+            System.Drawing.Imaging.BitmapData data = bmp.LockBits(
+              new System.Drawing.Rectangle(System.Drawing.Point.Empty, bmp.Size),
+              System.Drawing.Imaging.ImageLockMode.WriteOnly,
+              System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+            source.CopyPixels(
+              Int32Rect.Empty,
+              data.Scan0,
+              data.Height * data.Stride,
+              data.Stride);
+            bmp.UnlockBits(data);
+            return bmp;
         }
     }
 }

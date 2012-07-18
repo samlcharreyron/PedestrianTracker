@@ -103,6 +103,18 @@
     <Reference Include="3DTools">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\Extensions\3DTools\3DTools.dll</HintPath>
     </Reference>
+    <Reference Include="AForge, Version=2.2.4.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Aforge.NET\Sources\Video.VFW\bin\x86\Release\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video, Version=2.2.4.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Aforge.NET\Sources\Video.VFW\bin\x86\Release\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.VFW, Version=2.2.4.0, Culture=neutral, PublicKeyToken=a82f807c999637c8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Aforge.NET\Sources\Video.VFW\bin\x86\Release\AForge.Video.VFW.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Kinect, Version=1.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Petzold.Media3D">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\Extensions\3DTools\Petzold.Media3D.dll</HintPath>
@@ -130,6 +142,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Kalman.cs" />
+    <Compile Include="KalmanTester.cs" />
+    <Compile Include="Matrix.cs" />
     <Compile Include="RestartRecoveryHelper.cs" />
     <Compile Include="Trajectory3DView.xaml.cs">
       <DependentUpon>Trajectory3DView.xaml</DependentUpon>
@@ -139,9 +154,6 @@
     <Compile Include="RoadAxisPaddingConverter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Trajectory.cs" />
-    <Compile Include="TrajectoryDbDataSet.cs">
-      <DependentUpon>TrajectoryDbDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="TrajectoryDbDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -199,7 +211,6 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
-    <None Include="PedestrianTracker_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -258,6 +269,9 @@
     <Resource Include="icons\openHS.png" />
     <Resource Include="icons\saveHS.png" />
     <Resource Include="icons\pedtrac.ico" />
+    <Content Include="AForge.Video.FFMPEG.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TrajectoryDb.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

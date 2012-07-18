@@ -46,3 +46,13 @@ C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\Pe
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker.application
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker.exe
 C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\obj\x64\Debug\PedestrianTracker.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.Video.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.Video.VFW.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.Video.xml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.Video.VFW.xml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.xml
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.Video.FFMPEG.dll
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.Video.pdb
+C:\Users\Stewart\Documents\C#\PedestrianTracker\WpfApplication1\bin\x64\Debug\AForge.Video.VFW.pdb

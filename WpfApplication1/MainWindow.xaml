@@ -38,7 +38,8 @@
                             <Image Source="icons\saveHS.png" Height="16" Width="16" />
                         </MenuItem.Icon>
                     </MenuItem>
-                        <Separator></Separator>
+                    <MenuItem Header="Save Video" Click="mnuFileSaveVideo_Click"/>
+                    <Separator></Separator>
                 <MenuItem Header="E_xit" Click="mnuFileExit_Click" />
             </MenuItem>
                 <MenuItem Header="_View">

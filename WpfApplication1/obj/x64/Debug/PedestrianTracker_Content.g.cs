@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("aforge.video.ffmpeg.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("trajectorydb.mdf")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("trajectorydb_log.ldf")]
 

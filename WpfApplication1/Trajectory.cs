@@ -37,10 +37,6 @@ namespace PedestrianTracker
         private SkeletonPoint lastPoint;
         public List<Point> pointList;
 
-        ////For measuring time
-        //private DateTime lastTime, currentTime;
-        //private int deltaTime;
-
         //Frame subsampling for trajectory data MUST BE AN INTEGER MULTIPLE OF 30 (Frame Rate)
         private int FrameSub = 2;
 
@@ -56,7 +52,7 @@ namespace PedestrianTracker
         private int TrackingAngle = 0;
         private float AngleProjectionFactorX = 1;
         private float AngleProjectionFactorZ = 0;
-        private float deltaY = 0;
+        private float deltaX = 0;
         private float deltaZ = 0;
 
         //For drawing the trajectory
@@ -89,17 +85,27 @@ namespace PedestrianTracker
         private int frameIteration = 0;
         private double deltaDistance = 0;
         public double velocity  = 0;
-        private float deltaP = 0;
+        private double vx = 0;
+        private double vz = 0;
+        private double vx_filtered = 0;
+        private double vz_filtered = 0;
+        public double v_filtered = 0;
+
         public string Direction = "N";
+        public string DirectionV = "x";
+        public string DirectionH = "x";
 
         private int milliseconds;
         private int lastmilliseconds;
+        private int deltamilliseconds;
 
         public double Distance
         {
             get;
             set;
         }
+
+        private Kalman kalmanFilter;
 
         // Called when skeleton is not being tracked
         public void Reset()
@@ -130,6 +136,9 @@ namespace PedestrianTracker
             this.FrameSub = Properties.Settings.Default.TrajectorySubsample;
             this.milliseconds = 0;
             this.lastmilliseconds = 0;
+
+            this.kalmanFilter = new Kalman();
+
             InvalidateVisual();
         }
 
@@ -218,25 +227,46 @@ namespace PedestrianTracker
             if (this.frameIteration == FrameSub)
             {
                 frameIteration = 0;
-                
-                //Makes sure that there are at least 2 points so that distance differentials can be computed
-                if (lastPoint != null && (lastPoint.X != 0 && lastPoint.Y != 0 && lastPoint.Z != 0))
+
+                if (lastPoint == null || (lastPoint.X == 0 && lastPoint.Y == 0 && lastPoint.Z == 0))
                 {
-                    deltaY = Math.Abs(thisPoint.Y - lastPoint.Y);
-                    deltaZ = Math.Abs(thisPoint.Z - lastPoint.Z);
-                    
+                    kalmanFilter.Reset(thisPoint.X, thisPoint.Z, 1, 1, 100);
+                }
+
+                //Makes sure that there are at least 2 points so that distance differentials can be computed
+                else
+                {
+                    deltaX = thisPoint.Y - lastPoint.Y;
+                    deltaZ = thisPoint.Z - lastPoint.Z;
+
                     //Euclidean distance along the road axis
-                    deltaP = EuclideanDistance(thisPoint.X-lastPoint.X,thisPoint.Z-lastPoint.Z);
+                    deltaDistance = EuclideanDistance(deltaX, deltaZ);
 
-                    Direction = deltaP > 0 ? "R" : "L";
+                    //Heading
+                    DirectionV = deltaX > 0 ? "E" : "W";
+                    DirectionH = deltaZ > 0 ? "N" : "S";
+                    Direction = DirectionH + DirectionV;
 
-                    deltaDistance = Math.Abs(deltaP);
-                    
-                    //Time since trajectory started
+                    //Time since last sampling point
                     milliseconds = (int)DateTime.Now.Subtract(startTime).TotalMilliseconds;
 
+                    //Delta time
+                    deltamilliseconds = milliseconds - lastmilliseconds;
+
                     //velocity = deltaDistance * (30 / FrameSub);
-                    velocity = deltaDistance * 1000 / (milliseconds - lastmilliseconds);
+                    velocity = deltaDistance * 1000 / (deltamilliseconds);
+                    vx = deltaX * 1000 / deltamilliseconds;
+                    vz = deltaZ * 1000 / deltamilliseconds;
+
+                    //Kalmanize
+                    kalmanFilter.Prediction(deltamilliseconds);
+                    kalmanFilter.Covariance(deltamilliseconds);
+                    Matrix kalmanOutput = kalmanFilter.update(vx, vz);
+                    
+                    //Output of the kalman filter is updated state vectore X = {x,z,vx,vz}
+                    vx_filtered = kalmanOutput.Data[2];
+                    vz_filtered = kalmanOutput.Data[3];
+                    v_filtered = Math.Sqrt(vx_filtered *vx_filtered + vz_filtered * vz_filtered);
 
                     //filters out erroneous data
                     if (deltaDistance > MinDeltaDistance)
@@ -250,7 +280,7 @@ namespace PedestrianTracker
                         }
 
                         //Adds a point to the Point dataset
-                        addPointData(thisPoint, Distance, deltaDistance, velocity, Direction, t_key,milliseconds);
+                        addPointData(thisPoint, Distance, deltaDistance, velocity, Direction, t_key, deltamilliseconds, vx, vz);
 
                     }
 
@@ -354,11 +384,11 @@ namespace PedestrianTracker
         }
 
         // Add one point to points table, must refer to a trajectory in trajectories table
-        public void addPointData(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction, TrajectoryDbDataSet.trajectoriesRow t_key,int milliseconds)
+        public void addPointData(SkeletonPoint point, double distance, double deltaDistance, double velocity, string direction, TrajectoryDbDataSet.trajectoriesRow t_key,int milliseconds,double vx, double vz)
         {
             try
             {
-                Globals.ds.points.AddpointsRow(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction, (byte) trackedSkeleton, t_key,milliseconds);
+                Globals.ds.points.AddpointsRow(point.X, point.Y, point.Z, distance, deltaDistance, velocity, direction, (byte) trackedSkeleton, t_key,milliseconds,vx,vz);
             }
             catch
             {
@@ -378,7 +408,7 @@ namespace PedestrianTracker
             try
             {
                 this.startTime = DateTime.Now;
-                this.t_key = Globals.ds.trajectories.AddtrajectoriesRow((byte)trackedSkeleton, startTime, startTime, 0, "N", 0);
+                this.t_key = Globals.ds.trajectories.AddtrajectoriesRow((byte)trackedSkeleton, startTime, startTime, 0, "N", 0,0);
 
                 //Store this trajectory's row primary key
                 this.t_id = t_key.t_id;
@@ -401,18 +431,22 @@ namespace PedestrianTracker
 
                 //Average velocity and direction
                 double velocitySum = 0;
-                int directionSum = 0;
+                int directionSumH = 0;
+                int directionSumV = 0;
                 int rows = 0;
                 List<double> velocities = new List<double>();
+                List<double> velocities_filtered = new List<double>();
 
                 TrajectoryDbDataSet.pointsRow[] pointrows =  Globals.ds.points.Select(String.Format("t_id = {0}", t_id)) as TrajectoryDbDataSet.pointsRow[];
 
                 foreach (TrajectoryDbDataSet.pointsRow row in pointrows)
                 {
                     velocities.Add((double)row[5]);
-                    //velocitySum += (double)row[5];
-                    directionSum += Direction.Equals("R") ? 1 : 0;
+                    directionSumH += Direction.Equals("E") ? 1 : 0;
+                    directionSumV += Direction.Equals("N") ? 1 : 0;
                     
+                    velocities_filtered.Add(Math.Sqrt(row.vx * row.vx + row.vz * row.vz));
+
                     rows++;
 
                     if (rows == pointrows.Count())
@@ -441,8 +475,9 @@ namespace PedestrianTracker
                 double tester = velocitySum/n;
 
                 currentRow.average_velocity = (tester.CompareTo(double.NaN)>0) ? tester: mean;
-                currentRow.average_direction = (directionSum/rows > 0.5) ? "R" : "L";
+                currentRow.average_direction = ((directionSumV / rows > 0.5) ? "N" : "S") + ((directionSumH / rows > 0.5) ? "E" : "W");
                 currentRow.length = this.Distance;
+                currentRow.speed_kalmanized = velocities_filtered.Average();
 
             }
 
@@ -470,7 +505,7 @@ namespace PedestrianTracker
                 {
                     //TrajectoryTextBrush.Opacity = .5;
 
-                    trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity: " + this.velocity.ToString("#.##" + " m/s")  + "\nDirection: " + this.Direction
+                    trajectoryText = new FormattedText("Skeleton " + trackedSkeleton + "\nvelocity (filtered): " + this.v_filtered.ToString("#.##" + " m/s")  + "\nDirection: " + this.Direction
                         + "\nDistance: " + this.Distance,
                         //+"\ndY: " + deltaY + "  dZ: " + deltaZ,
                         //+ "\nX: " + currentSkeleton.Position.X + "  Y: " + currentSkeleton.Position.Y + "   Z: " + currentSkeleton.Position.Z,
