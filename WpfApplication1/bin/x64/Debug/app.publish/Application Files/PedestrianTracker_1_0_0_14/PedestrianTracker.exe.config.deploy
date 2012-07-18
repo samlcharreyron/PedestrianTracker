@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <configSections>
+        <sectionGroup name="userSettings" type="System.Configuration.UserSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" >
+            <section name="PedestrianTracker.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false" />
+        </sectionGroup>
+    </configSections>
+    <connectionStrings>
+        <add name="PedestrianTracker.Properties.Settings.TrajectoryDbConnectionString"
+            connectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=|DataDirectory|\TrajectoryDb.mdf;Integrated Security=True;Connect Timeout=30;User Instance=True"
+            providerName="System.Data.SqlClient" />
+    </connectionStrings>
+    <userSettings>
+        <PedestrianTracker.Properties.Settings>
+            <setting name="KinectAngle" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="TrajectorySubsample" serializeAs="String">
+                <value>2</value>
+            </setting>
+            <setting name="VerticalAngle" serializeAs="String">
+                <value>0</value>
+            </setting>
+            <setting name="RenderHeight" serializeAs="String">
+                <value>480</value>
+            </setting>
+            <setting name="RenderWidth" serializeAs="String">
+                <value>640</value>
+            </setting>
+            <setting name="dbTimerSetting" serializeAs="String">
+                <value>300000</value>
+            </setting>
+            <setting name="Logging" serializeAs="String">
+                <value>True</value>
+            </setting>
+            <setting name="xmlTimerSetting" serializeAs="String">
+                <value>3600000</value>
+            </setting>
+            <setting name="UseAngle" serializeAs="String">
+                <value>False</value>
+            </setting>
+        </PedestrianTracker.Properties.Settings>
+    </userSettings>
+</configuration>

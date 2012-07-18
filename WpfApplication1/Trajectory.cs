@@ -236,7 +236,7 @@ namespace PedestrianTracker
                 //Makes sure that there are at least 2 points so that distance differentials can be computed
                 else
                 {
-                    deltaX = thisPoint.Y - lastPoint.Y;
+                    deltaX = thisPoint.X - lastPoint.X;
                     deltaZ = thisPoint.Z - lastPoint.Z;
 
                     //Euclidean distance along the road axis
@@ -280,7 +280,7 @@ namespace PedestrianTracker
                         }
 
                         //Adds a point to the Point dataset
-                        addPointData(thisPoint, Distance, deltaDistance, velocity, Direction, t_key, deltamilliseconds, vx, vz);
+                        addPointData(thisPoint, Distance, deltaDistance, velocity, Direction, t_key, deltamilliseconds, vx_filtered, vz_filtered);
 
                     }
 
@@ -442,8 +442,8 @@ namespace PedestrianTracker
                 foreach (TrajectoryDbDataSet.pointsRow row in pointrows)
                 {
                     velocities.Add((double)row[5]);
-                    directionSumH += Direction.Equals("E") ? 1 : 0;
-                    directionSumV += Direction.Equals("N") ? 1 : 0;
+                    directionSumH += Direction.Contains("E") ? 1 : 0;
+                    directionSumV += Direction.Contains("N") ? 1 : 0;
                     
                     velocities_filtered.Add(Math.Sqrt(row.vx * row.vx + row.vz * row.vz));
 

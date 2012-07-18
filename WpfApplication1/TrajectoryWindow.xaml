@@ -8,7 +8,7 @@
         <my:TrajectoryDbDataSet x:Key="trajectoryDbDataSet" />
         <CollectionViewSource x:Key="trajectoriesViewSource" Source="{Binding Path=trajectories, Source={StaticResource trajectoryDbDataSet}}" />
     </Window.Resources>
-    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" Height="548" ItemsSource="{Binding Source={StaticResource trajectoriesViewSource}}" Name="trajectoriesDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" Width="569" SelectionChanged="trajectoriesDataGrid_SelectionChanged">
+    <DataGrid AutoGenerateColumns="False" EnableRowVirtualization="True" Height="548" ItemsSource="{Binding Source={StaticResource trajectoriesViewSource}}" Name="trajectoriesDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" Width="650" SelectionChanged="trajectoriesDataGrid_SelectionChanged">
         <DataGrid.Columns>
             <DataGridTextColumn x:Name="skeletonColumn" Binding="{Binding Path=skeleton}" Header="skeleton" Width="SizeToHeader" />
             <DataGridTextColumn x:Name="start_timeColumn" Header="start time" Binding="{Binding Path=start_time, StringFormat={}{0:hh:mm:ss.fff}}" Width="80" />
@@ -29,7 +29,8 @@
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn-->
             <DataGridTextColumn x:Name="average_velocityColumn" Binding="{Binding Path=average_velocity}" Header="average velocity" Width="SizeToHeader" />
-            <DataGridTextColumn x:Name="average_directionColumn" Binding="{Binding Path=average_direction}" Header="average direction" Width="SizeToHeader" />
+            <DataGridTextColumn x:Name="speed_kalmanizedColumn" Binding="{Binding Path=speed_kalmanized}" Header="speed (kalmanized)" Width="SizeToHeader" />
+            <DataGridTextColumn x:Name="average_directionColumn" Binding="{Binding Path=average_direction}" Header="direction" Width="SizeToHeader" />
             <DataGridTextColumn x:Name="lengthColumn" Binding="{Binding Path=length}" Header="length" Width="SizeToHeader" />
             <DataGridTextColumn x:Name="t_idColumn" Binding="{Binding Path=t_id}" Header="t id" IsReadOnly="True" Width="SizeToHeader" />
         </DataGrid.Columns>
