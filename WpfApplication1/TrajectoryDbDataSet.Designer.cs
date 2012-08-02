@@ -630,8 +630,6 @@ namespace PedestrianTracker {
                 this.columnp_id.AllowDBNull = false;
                 this.columnp_id.ReadOnly = true;
                 this.columnp_id.Unique = true;
-                this.columnt_id.AutoIncrementSeed = -1;
-                this.columnt_id.AutoIncrementStep = -1;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
